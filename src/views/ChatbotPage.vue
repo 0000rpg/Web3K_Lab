@@ -1,4 +1,47 @@
-<script setup></script>
+<script setup>
+import { useChatStore } from '@/stores/chat-store';
+import { storeToRefs } from 'pinia';
+import { ref, onMounted, nextTick } from 'vue';
+
+const chatStore = useChatStore();
+const {
+    messageHistory,
+    useLocalStorage,
+    apiKey,
+    siteUrl,
+    siteName,
+    userInput,
+    status,
+    isGenerating,
+} = storeToRefs(chatStore);
+
+const chatContainer = ref(null);
+
+onMounted(() => {
+    chatStore.initialize();
+});
+
+const handleKeyPress = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        chatStore.sendMessage();
+    }
+};
+
+// Прокрутка к последнему сообщению
+const scrollToBottom = () => {
+    nextTick(() => {
+        if (chatContainer.value) {
+            chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+        }
+    });
+};
+
+// Наблюдаем за изменениями истории сообщений для прокрутки
+onMounted(() => {
+    scrollToBottom();
+});
+</script>
 
 <template>
     <main>
@@ -7,71 +50,111 @@
             <p>Панель для просмотра</p>
         </section>
         <article>
-            <!--Chatbot-->
             <div class="container">
                 <h3>Чат-бот</h3>
                 <div class="model-info">
                     <h4>Используемая модель:</h4>
-                    <p>
-                        <strong>deepseek/deepseek-chat-v3.1:free</strong> - бесплатная модель от
-                        DeepSeek
-                    </p>
+                    <p><strong>openai/gpt-oss-20b:free</strong> - бесплатная модель</p>
                 </div>
 
                 <div class="memory-options">
                     <label>
-                        <input type="radio" name="memory-type" id="session-memory" />
+                        <input
+                            type="radio"
+                            name="memory-type"
+                            :value="false"
+                            v-model="useLocalStorage"
+                            @change="chatStore.updateMemoryType"
+                        />
                         Память сессии (до перезагрузки)
                     </label>
                     <label>
-                        <input type="radio" name="memory-type" id="local-memory" checked />
+                        <input
+                            type="radio"
+                            name="memory-type"
+                            :value="true"
+                            v-model="useLocalStorage"
+                            @change="chatStore.updateMemoryType"
+                        />
                         Постоянная память (после перезагрузки)
                     </label>
                 </div>
 
                 <div class="input-group api-key">
                     <label for="api-key">API ключ:</label>
-                    <input type="text" id="api-key" placeholder="Введите ваш API ключ" />
+                    <input
+                        type="text"
+                        id="api-key"
+                        v-model="apiKey"
+                        placeholder="Введите ваш API ключ"
+                    />
                 </div>
 
                 <div class="input-group site-url">
                     <label for="site-url">URL вашего сайта (опционально):</label>
-                    <input type="text" id="site-url" placeholder="https://example.com" />
+                    <input
+                        type="text"
+                        id="site-url"
+                        v-model="siteUrl"
+                        placeholder="https://example.com"
+                    />
                 </div>
 
                 <div class="input-group site-name">
                     <label for="site-name">Название сайта (опционально):</label>
-                    <input type="text" id="site-name" placeholder="Мой сайт" />
+                    <input type="text" id="site-name" v-model="siteName" placeholder="Мой сайт" />
                 </div>
 
                 <div class="input-group">
                     <label for="user-input">Ваше сообщение:</label>
                     <textarea
                         id="user-input"
+                        v-model="userInput"
+                        @keypress="handleKeyPress"
                         placeholder="Введите ваш вопрос или сообщение..."
+                        :disabled="isGenerating"
                     ></textarea>
                 </div>
 
-                <button id="send-button">Отправить сообщение</button>
+                <button @click="chatStore.sendMessage" :disabled="isGenerating">
+                    {{ isGenerating ? 'Генерация...' : 'Отправить сообщение' }}
+                </button>
 
                 <div class="session-controls">
-                    <button id="clear-history">Очистить историю</button>
-                    <button id="save-session">Сохранить сессию</button>
-                    <button id="load-session">Загрузить сессию</button>
+                    <button @click="chatStore.clearHistory">Очистить историю</button>
+                    <button @click="chatStore.saveSession">Сохранить сессию</button>
+                    <button @click="chatStore.loadSession">Загрузить сессию</button>
                 </div>
 
-                <div class="status info" id="status">Готов к отправке сообщения</div>
+                <div
+                    class="status"
+                    :class="{
+                        info: status,
+                        error: status && status.includes('Ошибка'),
+                    }"
+                >
+                    {{ status }}
+                </div>
             </div>
 
             <div class="container">
                 <h3>Диалог:</h3>
-                <div class="chat-container" id="chat-container">
-                    <div class="message assistant-message">
-                        Привет! Я готов ответить на ваши вопросы.
-                    </div>
+                <div class="chat-container" ref="chatContainer">
+                    <div
+                        v-for="(message, index) in messageHistory"
+                        :key="index"
+                        :class="[
+                            'message',
+                            message.role === 'user'
+                                ? 'user-message'
+                                : message.role === 'assistant'
+                                  ? 'assistant-message'
+                                  : 'error-message',
+                        ]"
+                        v-html="chatStore.formatMessage(message.content)"
+                    ></div>
                 </div>
             </div>
-            <!--Chatbot-->
         </article>
     </main>
 </template>
