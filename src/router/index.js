@@ -52,7 +52,7 @@ const router = createRouter({
         {
             path: '/study',
             name: 'study',
-            component: () => import('../views/Study.vue'),
+            component: () => import('../views/StudyPage.vue'),
         },
     ],
 });

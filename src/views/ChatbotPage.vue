@@ -41,11 +41,46 @@ const scrollToBottom = () => {
 onMounted(() => {
     scrollToBottom();
 });
+
+// Функция для копирования LaTeX
+const setupLatexCopy = () => {
+    onMounted(() => {
+        // Добавляем обработчики для копирования LaTeX
+        const handleLatexClick = (event) => {
+            const target = event.target.closest('.katex-block, .katex-inline');
+            if (target && target.dataset.latex) {
+                navigator.clipboard.writeText(target.dataset.latex).then(() => {
+                    const originalTitle = target.title;
+                    target.title = 'Скопировано!';
+                    setTimeout(() => {
+                        target.title = originalTitle || 'Нажмите чтобы скопировать LaTeX';
+                    }, 2000);
+                });
+            }
+        };
+
+        // Добавляем подсказки при наведении
+        const addLatexTooltips = () => {
+            document.querySelectorAll('.katex-block, .katex-inline').forEach((el) => {
+                if (!el.title) {
+                    el.title = 'Нажмите чтобы скопировать LaTeX';
+                    el.style.cursor = 'pointer';
+                }
+            });
+        };
+
+        document.addEventListener('click', handleLatexClick);
+
+        // Добавляем tooltips после рендеринга сообщений
+        setTimeout(addLatexTooltips, 100);
+    });
+};
+
+setupLatexCopy();
 </script>
 
 <template>
     <main>
-        <canvas class="background"></canvas>
         <section class="mainTheme">
             <p>Панель для просмотра</p>
         </section>
@@ -80,7 +115,7 @@ onMounted(() => {
                     </label>
                 </div>
 
-                <div class="input-group api-key">
+                <div class="input-group api-key" v-show="false">
                     <label for="api-key">API ключ:</label>
                     <input
                         type="text"
@@ -90,7 +125,7 @@ onMounted(() => {
                     />
                 </div>
 
-                <div class="input-group site-url">
+                <div class="input-group site-url" v-show="false">
                     <label for="site-url">URL вашего сайта (опционально):</label>
                     <input
                         type="text"
@@ -100,7 +135,7 @@ onMounted(() => {
                     />
                 </div>
 
-                <div class="input-group site-name">
+                <div class="input-group site-name" v-show="false">
                     <label for="site-name">Название сайта (опционально):</label>
                     <input type="text" id="site-name" v-model="siteName" placeholder="Мой сайт" />
                 </div>
@@ -241,12 +276,6 @@ onMounted(() => {
         }
         display: flex;
     }
-    .api-key {
-        visibility: collapse;
-        height: 0px;
-        margin: 0px;
-        padding: 0px;
-    }
     .chatbot-block {
         border: 1px solid var(--border);
         overflow: hidden;
@@ -316,16 +345,6 @@ onMounted(() => {
         background-color: var(--button);
         border: 3px solid var(--border-accent);
         transform: scale(1.02);
-    }
-    .site-url {
-        visibility: collapse;
-        height: 0px;
-        margin: 0px;
-    }
-    .site-name {
-        visibility: collapse;
-        height: 0px;
-        margin: 0px;
     }
     .chat-container {
         margin: 1em 0.5em 0.5em 0.5em;
@@ -403,5 +422,324 @@ onMounted(() => {
         border-radius: 0;
         margin: 0;
     }
+}
+/*LATEX */
+/* Улучшенные стили для математических выражений */
+.katex-block {
+    margin: 1.5em 0;
+    padding: 1.5em;
+    background: linear-gradient(135deg, var(--aside-action) 0%, rgba(34, 36, 39, 0.8) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow-x: auto;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.katex-block::before {
+    content: 'Math';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--theme);
+    color: white;
+    font-size: 0.8em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.katex-inline {
+    background: rgba(237, 108, 33, 0.1);
+    padding: 0.2em 0.5em;
+    border-radius: 6px;
+    font-style: normal;
+    border: 1px solid rgba(237, 108, 33, 0.3);
+    margin: 0 0.2em;
+}
+
+.latex-error {
+    background: rgba(224, 93, 45, 0.2);
+    color: var(--accent);
+    padding: 0.3em 0.6em;
+    border-radius: 4px;
+    border: 1px dashed var(--accent);
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+/* Улучшенные стили для кода */
+.code-block {
+    background: var(--header);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2em;
+    margin: 1.2em 0;
+    overflow-x: auto;
+    position: relative;
+}
+
+.code-block::before {
+    content: 'Code';
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    background: var(--border-accent);
+    color: var(--text);
+    font-size: 0.8em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.code-block code {
+    background: none;
+    padding: 0;
+    border: none;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+.inline-code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.85em;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Улучшенные таблицы */
+.markdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.2em 0;
+    background: var(--aside-action);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.markdown-table th,
+.markdown-table td {
+    padding: 0.8em 1em;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.markdown-table th {
+    background: var(--header);
+    font-weight: bold;
+    color: var(--theme);
+}
+
+.markdown-table tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.markdown-table tr:hover {
+    background: rgba(237, 108, 33, 0.05);
+}
+
+.table-container {
+    overflow-x: auto;
+    margin: 1.2em 0;
+    border-radius: 8px;
+}
+
+/* Улучшенные списки */
+.markdown-list {
+    margin: 0.8em 0;
+    padding-left: 2.2em;
+}
+
+.markdown-list li {
+    margin: 0.4em 0;
+    line-height: 1.6;
+    position: relative;
+}
+
+.markdown-list li::before {
+    content: '';
+    position: absolute;
+    left: -1.2em;
+    top: 0.7em;
+    width: 6px;
+    height: 6px;
+    background: var(--theme);
+    border-radius: 50%;
+}
+
+/* Улучшенные блоки цитат */
+.markdown-blockquote {
+    border-left: 4px solid var(--theme);
+    margin: 1.2em 0;
+    padding: 1em 1.5em;
+    background: linear-gradient(135deg, var(--aside-action) 0%, rgba(34, 36, 39, 0.6) 100%);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    position: relative;
+}
+
+.markdown-blockquote::before {
+    content: '"';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 2em;
+    color: var(--theme);
+    opacity: 0.3;
+    font-family: serif;
+}
+
+/* Улучшенные параграфы */
+.markdown-paragraph {
+    line-height: 1.7;
+    margin: 0.8em 0;
+    text-align: justify;
+}
+
+.markdown-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 0.8em 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+}
+
+.markdown-link {
+    color: var(--theme);
+    text-decoration: none;
+    border-bottom: 1px solid var(--theme);
+    transition: all 0.3s ease;
+    padding: 0.1em 0.2em;
+}
+
+.markdown-link:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: rgba(237, 108, 33, 0.1);
+    border-radius: 3px;
+}
+
+/* Улучшенные заголовки */
+.heading-1 {
+    font-size: 2.2em;
+    margin: 1em 0 0.5em 0;
+    color: var(--theme);
+    border-bottom: 2px solid var(--theme);
+    padding-bottom: 0.3em;
+}
+.heading-2 {
+    font-size: 1.8em;
+    margin: 1.2em 0 0.6em 0;
+    color: var(--theme);
+}
+.heading-3 {
+    font-size: 1.4em;
+    margin: 1em 0 0.5em 0;
+    color: var(--text);
+}
+.heading-4 {
+    font-size: 1.2em;
+    margin: 1em 0 0.5em 0;
+    color: var(--text);
+}
+.heading-5 {
+    font-size: 1.1em;
+    margin: 0.8em 0 0.4em 0;
+    color: var(--text);
+    font-style: italic;
+}
+.heading-6 {
+    font-size: 1em;
+    margin: 0.8em 0 0.4em 0;
+    color: var(--border-accent);
+    font-style: italic;
+}
+
+.divider {
+    border: none;
+    border-top: 2px solid var(--border);
+    margin: 2em 0;
+    position: relative;
+}
+
+.divider::after {
+    content: '§';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--background);
+    padding: 0 10px;
+    color: var(--border-accent);
+    font-size: 1.2em;
+}
+
+/* Анимации */
+.message {
+    transition: all 0.3s ease;
+}
+
+.message:hover {
+    transform: translateX(5px);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .katex-block {
+        padding: 1em;
+        font-size: 0.9em;
+        margin: 1em 0;
+    }
+
+    .markdown-table {
+        font-size: 0.85em;
+    }
+
+    .markdown-table th,
+    .markdown-table td {
+        padding: 0.6em 0.8em;
+    }
+
+    .code-block {
+        padding: 1em;
+        font-size: 0.9em;
+    }
+
+    .heading-1 {
+        font-size: 1.8em;
+    }
+    .heading-2 {
+        font-size: 1.5em;
+    }
+    .heading-3 {
+        font-size: 1.2em;
+    }
+}
+
+/* Подсветка синтаксиса (базовая) */
+.code-block .keyword {
+    color: #ff79c6;
+}
+.code-block .function {
+    color: #50fa7b;
+}
+.code-block .string {
+    color: #f1fa8c;
+}
+.code-block .comment {
+    color: #6272a4;
+    font-style: italic;
+}
+.code-block .number {
+    color: #bd93f9;
+}
+.code-block .operator {
+    color: #ff79c6;
 }
 </style>

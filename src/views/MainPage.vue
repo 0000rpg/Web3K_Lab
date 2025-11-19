@@ -26,7 +26,6 @@ onUnmounted(() => {
 
 <template>
     <main>
-        <canvas class="background"></canvas>
         <section class="mainTheme">
             <h2>Информация о пользователе</h2>
             <div class="horizontal-container">

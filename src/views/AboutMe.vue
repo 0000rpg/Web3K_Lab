@@ -8,7 +8,6 @@ const { articles, autoBiography } = storeToRefs(aboutMeStore);
 
 <template>
     <main>
-        <canvas class="background"></canvas>
         <section class="mainTheme">
             <h2>Автобиография</h2>
             <div

@@ -8,7 +8,6 @@ const { textExamples, notesText, navRoutes } = storeToRefs(homeStore);
 
 <template>
     <main>
-        <canvas class="background"></canvas>
         <section class="mainTheme">
             <h2>Текущая версия страницы - 2.1.2</h2>
             <p>Будет обновляться в зависимости от работ</p>
