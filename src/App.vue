@@ -1,6 +1,6 @@
 <script setup>
-import BackGround from './components/BackGround.vue';
-import HeaderVue from './components/Header.vue';
+import BackGround from '@/components/BackGround.vue';
+import HeaderVue from '@/components/HeaderBlock.vue';
 </script>
 
 <template>

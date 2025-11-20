@@ -1,10 +1,14 @@
-<script setup></script>
+<script setup>
+import FormGenerator from '@/components/FormGenerator.vue';
+</script>
 
 <template>
     <main>
         <canvas class="background"></canvas>
         <section class="mainTheme">
             <h2>Свяжитесь со мной</h2>
+
+            <FormGenerator />
 
             <form action="mailto:your.email@example.com" method="post" enctype="text/plain">
                 <div>

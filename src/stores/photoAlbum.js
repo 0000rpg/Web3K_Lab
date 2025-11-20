@@ -109,7 +109,6 @@ export const usePhotoAlbum = defineStore('photoAlbum', () => {
         const xPercent = (clickX / rect.width) * 100;
         const yPercent = (clickY / rect.height) * 100;
 
-        // Точная логика из старой реализации
         if (yPercent >= 20 && yPercent <= 80) {
             if (xPercent <= 20) {
                 prevImage();
