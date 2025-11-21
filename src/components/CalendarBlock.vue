@@ -7,7 +7,7 @@
             v-model="displayValue"
             readonly
             @click="toggleCalendar"
-            class="birthdate-input p-1.5 mt-1 w-40 cursor-pointer bg-[#1c1e21] border border-[#5c5c5c] rounded-xl text-[#f5f5f5] focus:outline-none focus:border-[#e05d2d]"
+            class="birthdate-input p-1.5 mt-1 w-full cursor-pointer bg-[#1c1e21] border border-[#5c5c5c] rounded-xl text-[#f5f5f5] focus:outline-none focus:border-[#e05d2d]"
         />
         <div
             v-if="showCalendar"
