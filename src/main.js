@@ -1,11 +1,12 @@
 import './assets/external-scripts/background.js';
 
 //import './assets/main.css';
-import './assets/global/main.css';
-import './assets/global/header.css';
-import './assets/global/footer.css';
-import './assets/global/tables.css';
+//import './assets/global/main.css';
+//import './assets/global/header.css';
+//import './assets/global/footer.css';
+//import './assets/global/tables.css';
 import './assets/style.css';
+//import './assets/global/global.css';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';

@@ -1,0 +1,69 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Класс для ссылок с подсветкой */
+.link-highlight {
+    color: #ffffff;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.link-highlight::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -1px;
+    width: 0;
+    height: 2px;
+    background-color: #e05d2d;
+    transition: all 0.3s ease;
+}
+
+.link-highlight:hover {
+    color: #e05d2d;
+}
+
+.link-highlight:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+/* Класс для ссылок без подчеркивания */
+.no-underline-custom {
+    color: #ed6c21;
+}
+
+.no-underline-custom:hover {
+    color: #ed6c21;
+}
+
+.no-underline-custom::after,
+.no-underline-custom:hover::after {
+    display: none;
+}
+
+/* Стили для скроллбара */
+.scrollbar-custom::-webkit-scrollbar {
+    height: 6px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+    background: #18191a;
+    border-radius: 10px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+    background: #e05d2d;
+    border-radius: 10px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: #ed6c21;
+}
+
+.scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: #e05d2d #18191a;
+}

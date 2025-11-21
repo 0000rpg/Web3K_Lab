@@ -284,7 +284,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <canvas class="background"></canvas>
+    <canvas
+        class="background fixed top-0 left-0 w-screen h-screen z-[-1000] pointer-events-none"
+    ></canvas>
 </template>
 
 <style scoped></style>

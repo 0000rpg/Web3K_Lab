@@ -155,31 +155,45 @@ onMounted(() => {
 </script>
 
 <template>
-    <nav>
+    <nav class="flex items-center justify-center">
         <RouterLink
             to="/"
             class="headLogo"
             :class="{
                 headLogoActive: isHomePage,
-                noUnderline: isHomePage,
+                'text-[#ed6c21] hover:text-[#ed6c21]': isHomePage,
             }"
         />
-
-        <ul @wheel="headerScroll">
-            <li v-for="button in navButtons" :key="button.path">
+        <ul
+            @wheel="headerScroll"
+            class="flex flex-row flex-nowrap justify-between overflow-x-auto overflow-y-hidden mt-2 list-none p-0 m-0 box-border touch-pan-x scrollbar-orange z-100499"
+        >
+            <li
+                v-for="button in navButtons"
+                :key="button.path"
+                class="mx-2 my-0.5 px-2 py-0.5 rounded text-xl whitespace-nowrap overflow-ellipsis"
+            >
                 <RouterLink
                     :to="button.path"
-                    :class="{ noUnderline: $route.path.includes(button.path.replace('/', '')) }"
+                    :class="{
+                        'text-[#ed6c21] hover:text-[#ed6c21]': $route.path.includes(
+                            button.path.replace('/', ''),
+                        ),
+                        'text-white hover:text-[#e05d2d]': !$route.path.includes(
+                            button.path.replace('/', ''),
+                        ),
+                    }"
                     @click="(e) => button.hasModal && handleHobbyClick(e, button)"
                     @dblclick="() => button.hasModal && handleHobbyDblClick(button)"
+                    class="no-underline relative transition-colors duration-300 after:content-[''] after:absolute after:left-1/2 after:-bottom-1 after:w-0 after:h-0.5 after:bg-[#e05d2d] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
                 >
                     {{ button.name }}
                 </RouterLink>
             </li>
 
-            <div class="headerClock">
-                <p>{{ timeTable.time }}</p>
-                <p>{{ timeTable.sumDate }}</p>
+            <div class="self-center whitespace-nowrap px-6 font-mono text-white">
+                <p class="p-0 m-0">{{ timeTable.time }}</p>
+                <p class="p-0 m-0">{{ timeTable.sumDate }}</p>
             </div>
         </ul>
 
@@ -190,10 +204,14 @@ onMounted(() => {
                 top: `${modalPosition.top}px`,
                 left: `${modalPosition.left}px`,
             }"
-            class="modalHeaderMenu"
+            class="fixed flex flex-col pt-2 min-w-fit text-xl bg-[#18191a] border border-[#5c5c5c] border-t-0 rounded-b-xl mt-3"
         >
-            <li v-for="anchor in hobbyAnchors" :key="anchor.anchor">
-                <a href="#" @click.prevent="navigateToAnchor(anchor.anchor)">
+            <li v-for="anchor in hobbyAnchors" :key="anchor.anchor" class="mx-2 my-0.5 px-2 py-0.5">
+                <a
+                    href="#"
+                    @click.prevent="navigateToAnchor(anchor.anchor)"
+                    class="text-white no-underline relative hover:text-[#e05d2d] transition-colors duration-300 after:content-[''] after:absolute after:left-1/2 after:-bottom-1 after:w-0 after:h-0.5 after:bg-[#e05d2d] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+                >
                     {{ anchor.name }}
                 </a>
             </li>
@@ -201,4 +219,52 @@ onMounted(() => {
     </nav>
 </template>
 
-<style scoped></style>
+<style>
+.headLogo {
+    mask-image: url('/src/assets/images/лого.svg');
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    background-color: #e05d2d;
+    height: 2em;
+    width: 3em;
+    margin: 0.5em;
+    color: #e05d2d;
+    min-width: 40px;
+}
+
+.headLogoActive {
+    mask-image: url('/src/assets/images/eye_logo.png');
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    background-color: #e05d2d;
+    height: 2em;
+    width: 3em;
+    margin: 0.5em;
+    color: #e05d2d;
+    min-width: 40px;
+}
+
+/* Стили для оранжевого скроллбара */
+.scrollbar-orange::-webkit-scrollbar {
+    height: 6px;
+}
+
+.scrollbar-orange::-webkit-scrollbar-track {
+    background: #18191a;
+    border-radius: 10px;
+}
+
+.scrollbar-orange::-webkit-scrollbar-thumb {
+    background: #e05d2d;
+    border-radius: 10px;
+}
+
+.scrollbar-orange::-webkit-scrollbar-thumb:hover {
+    background: #ed6c21;
+}
+
+.scrollbar-orange {
+    scrollbar-width: thin;
+    scrollbar-color: #e05d2d #18191a;
+}
+</style>
