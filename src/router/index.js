@@ -32,7 +32,7 @@ const router = createRouter({
         {
             path: '/history',
             name: 'history',
-            component: () => import('../views/History.vue'),
+            component: () => import('../views/HistoryPage.vue'),
         },
         {
             path: '/math',

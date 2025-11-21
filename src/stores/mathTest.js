@@ -221,8 +221,20 @@ export const useMathTest = defineStore('mathTest', () => {
     const validationInProgress = ref(false);
     const botFeedback = ref({});
 
+    // Сброс ошибок для полей с ботом при изменении
+    const resetBotErrors = (fieldName) => {
+        if (fieldName === 'derivative' || fieldName === 'integrals' || fieldName === 'question') {
+            mathTestErrors.value[fieldName] = '';
+            if (botFeedback.value[fieldName]) {
+                botFeedback.value[fieldName] = null;
+            }
+        }
+    };
+
     // Простая валидация на клиенте
     const validateField = (fieldName, value) => {
+        resetBotErrors(fieldName); // Сбрасываем ошибки бота при изменении поля
+
         switch (fieldName) {
             case 'test-name':
                 if (!value.trim()) {
@@ -247,76 +259,107 @@ export const useMathTest = defineStore('mathTest', () => {
                     mathTestErrors.value[fieldName] = '';
                 }
                 break;
+            case 'derivative':
+                if (!value.trim()) {
+                    mathTestErrors.value[fieldName] = 'Ответ обязателен';
+                } else {
+                    mathTestErrors.value[fieldName] = '';
+                }
+                break;
+            case 'integrals':
+                if (!value || value.length === 0) {
+                    mathTestErrors.value[fieldName] = 'Выберите хотя бы один вариант';
+                } else {
+                    mathTestErrors.value[fieldName] = '';
+                }
+                break;
+            case 'question':
+                if (!value.trim()) {
+                    mathTestErrors.value[fieldName] = 'Ответ обязателен';
+                } else {
+                    mathTestErrors.value[fieldName] = '';
+                }
+                break;
             default:
                 mathTestErrors.value[fieldName] = '';
                 break;
         }
     };
 
-    // Валидация с помощью бота
+    // Единая валидация всей формы с ботом
     const validateWithBot = async () => {
         validationInProgress.value = true;
-        botFeedback.value = {};
 
         try {
-            // Проверка производной
-            if (mathTestData.value.derivative) {
-                const derivativeResult = await mathBotStore.checkDerivative(
-                    mathTestData.value.derivative,
-                );
-                if (!derivativeResult.correct) {
-                    mathTestErrors.value.derivative = derivativeResult.feedback;
-                    botFeedback.value.derivative = derivativeResult;
-                } else {
-                    mathTestErrors.value.derivative = '';
-                }
+            // Проверяем все ответы одним запросом
+            const validationResult = await mathBotStore.validateAllAnswers({
+                derivative: mathTestData.value.derivative,
+                integrals: mathTestData.value.integrals,
+                question: mathTestData.value.question,
+            });
+
+            console.log('Результат проверки ботом:', validationResult);
+
+            // Обрабатываем результат производной
+            if (!validationResult.derivative.correct) {
+                mathTestErrors.value.derivative = validationResult.derivative.feedback;
+                botFeedback.value.derivative = validationResult.derivative;
+            } else {
+                mathTestErrors.value.derivative = '';
+                botFeedback.value.derivative = null;
             }
 
-            // Проверка интегралов
-            if (mathTestData.value.integrals && mathTestData.value.integrals.length > 0) {
-                const integralsResult = await mathBotStore.checkIntegrals(
-                    mathTestData.value.integrals,
-                );
-                if (!integralsResult.correct) {
-                    mathTestErrors.value.integrals = integralsResult.feedback;
-                    botFeedback.value.integrals = integralsResult;
-                } else {
-                    mathTestErrors.value.integrals = '';
-                }
+            // Обрабатываем результат интегралов
+            if (!validationResult.integrals.correct) {
+                mathTestErrors.value.integrals = validationResult.integrals.feedback;
+                botFeedback.value.integrals = validationResult.integrals;
+            } else {
+                mathTestErrors.value.integrals = '';
+                botFeedback.value.integrals = null;
             }
 
-            // Проверка утверждения (вопрос 4)
-            if (mathTestData.value.question) {
-                const statementText =
-                    document.getElementById('question-text')?.value ||
-                    'Математическое утверждение требует проверки';
-                const questionResult = await mathBotStore.checkStatement(
-                    mathTestData.value.question,
-                    statementText,
-                );
-                if (!questionResult.correct) {
-                    mathTestErrors.value.question = questionResult.feedback;
-                    botFeedback.value.question = questionResult;
-                } else {
-                    mathTestErrors.value.question = '';
-                }
+            // Обрабатываем результат утверждения
+            if (!validationResult.statement.correct) {
+                mathTestErrors.value.question = validationResult.statement.feedback;
+                botFeedback.value.question = validationResult.statement;
+            } else {
+                mathTestErrors.value.question = '';
+                botFeedback.value.question = null;
             }
         } catch (error) {
             console.error('Ошибка при проверке ботом:', error);
+            // Устанавливаем общие ошибки при сбое, но не блокируем форму полностью
+            mathTestErrors.value.derivative = 'Ошибка проверки ответа';
+            mathTestErrors.value.integrals = 'Ошибка проверки ответа';
+            mathTestErrors.value.question = 'Ошибка проверки ответа';
         } finally {
             validationInProgress.value = false;
         }
     };
 
     const validateForm = async () => {
-        // Базовая валидация
+        // Сначала сбрасываем все ошибки бота
+        botFeedback.value = {};
+
+        // Базовая валидация обязательных полей
         validateField('test-name', mathTestData.value['test-name']);
         validateField('group', mathTestData.value.group);
         validateField('matrix', mathTestData.value.matrix);
+        validateField('derivative', mathTestData.value.derivative);
+        validateField('integrals', mathTestData.value.integrals);
+        validateField('question', mathTestData.value.question);
+
+        // Проверяем, есть ли базовые ошибки
+        const hasBasicErrors = Object.values(mathTestErrors.value).some((error) => error !== '');
+
+        if (hasBasicErrors) {
+            return false;
+        }
 
         // Валидация сложных вопросов через бота
         await validateWithBot();
 
+        // После проверки ботом снова проверяем ошибки
         return Object.values(mathTestErrors.value).every((error) => error === '');
     };
 
@@ -324,12 +367,19 @@ export const useMathTest = defineStore('mathTest', () => {
         if (await validateForm()) {
             console.log('Тест отправлен:', mathTestData.value);
             alert('Тест успешно отправлен!');
-
-            // Здесь можно добавить отправку на сервер
-            // await submitToServer(mathTestData.value);
         } else {
             console.log('Ошибки валидации:', mathTestErrors.value);
-            alert('Пожалуйста, исправьте ошибки в форме');
+            // Не блокируем полностью, позволяем исправить и отправить снова
+            const hasBotErrors =
+                mathTestErrors.value.derivative ||
+                mathTestErrors.value.integrals ||
+                mathTestErrors.value.question;
+
+            if (hasBotErrors) {
+                alert('Есть ошибки в ответах. Исправьте их и отправьте снова.');
+            } else {
+                alert('Пожалуйста, заполните все обязательные поля');
+            }
         }
     };
 
@@ -354,18 +404,17 @@ export const useMathTest = defineStore('mathTest', () => {
         validationInProgress.value = false;
     };
 
-    // Вычисляемое свойство для валидности формы
+    // Вычисляемое свойство для валидности формы - теперь разрешаем отправку даже с ошибками бота
     const isFormValid = computed(() => {
-        return (
-            Object.values(mathTestErrors.value).every((error) => error === '') &&
-            !validationInProgress.value &&
+        const basicFieldsValid =
             mathTestData.value['test-name'] &&
             mathTestData.value.group &&
             mathTestData.value.derivative &&
             mathTestData.value.integrals.length > 0 &&
             mathTestData.value.matrix &&
-            mathTestData.value.question
-        );
+            mathTestData.value.question;
+
+        return basicFieldsValid && !validationInProgress.value;
     });
 
     return {
@@ -382,5 +431,6 @@ export const useMathTest = defineStore('mathTest', () => {
         handleSubmit,
         resetForm,
         isFormValid,
+        resetBotErrors,
     };
 });

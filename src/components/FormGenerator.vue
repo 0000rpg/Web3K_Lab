@@ -18,8 +18,7 @@ const {
     botFeedback,
 } = storeToRefs(props.store);
 
-const { handleSubmit, resetForm, updateAgeFromBirthdate, validateField, validateForm } =
-    props.store;
+const { handleSubmit, resetForm, updateAgeFromBirthdate, validateField } = props.store;
 
 const handleDateSelected = (date) => {
     if (updateAgeFromBirthdate) {
@@ -39,12 +38,9 @@ const handleInput = (fieldName, value) => {
     }
 };
 
+// Асинхронный обработчик отправки формы
 const handleFormSubmit = async (event) => {
     event.preventDefault();
-
-    if (validateForm) {
-        await validateForm();
-    }
 
     if (handleSubmit) {
         await handleSubmit();
@@ -55,11 +51,12 @@ const handleFormSubmit = async (event) => {
 <template>
     <form @submit="handleFormSubmit" @reset="handleReset" class="p-0 bg-[#222427]">
         <div class="flex flex-col flex-grow gap-6 m-4">
+            <!-- Индикатор проверки ботом -->
             <div
                 v-if="validationInProgress"
                 class="bg-blue-500 text-white p-3 rounded-xl text-center"
             >
-                Проверка ваших ответов...
+                Бот проверяет ваши ответы...
             </div>
 
             <div
@@ -75,6 +72,7 @@ const handleFormSubmit = async (event) => {
                     {{ form.context }}
                 </p>
 
+                <!-- Regular Input Fields -->
                 <div
                     v-if="form.input && !form.variables"
                     class="flex flex-col sm:flex-row sm:items-start sm:gap-4 w-full max-w-full"
@@ -100,12 +98,19 @@ const handleFormSubmit = async (event) => {
                                 'border-2 border-green-500':
                                     formData[form.input.name] &&
                                     !formErrors[form.input.name] &&
-                                    (!form.usesBot || !botFeedback[form.input.name]),
-                                'border-2 border-red-500': formErrors[form.input.name],
+                                    (!form.usesBot ||
+                                        !botFeedback ||
+                                        !botFeedback[form.input.name]),
+                                'border-2 border-red-500':
+                                    formErrors[form.input.name] &&
+                                    (!form.usesBot ||
+                                        !botFeedback ||
+                                        !botFeedback[form.input.name]),
                                 'border-2 border-yellow-500':
                                     form.usesBot && botFeedback && botFeedback[form.input.name],
                             }"
                         />
+                        <!-- Стандартные ошибки (красные) -->
                         <div
                             v-if="
                                 formErrors[form.input.name] &&
@@ -115,6 +120,7 @@ const handleFormSubmit = async (event) => {
                         >
                             {{ formErrors[form.input.name] }}
                         </div>
+                        <!-- Фидбэк от бота (желтые) -->
                         <div
                             v-if="form.usesBot && botFeedback && botFeedback[form.input.name]"
                             class="text-yellow-500 text-sm mt-1"
@@ -124,6 +130,7 @@ const handleFormSubmit = async (event) => {
                     </div>
                 </div>
 
+                <!-- Radio Buttons -->
                 <div
                     v-if="form.variables && form.variables[0]?.input?.type === 'radio'"
                     class="flex flex-col sm:flex-row sm:items-start sm:gap-4"
@@ -154,14 +161,31 @@ const handleFormSubmit = async (event) => {
                             </template>
                         </div>
                         <div
-                            v-if="formErrors[form.variables[0].input.name]"
+                            v-if="
+                                formErrors[form.variables[0].input.name] &&
+                                (!form.usesBot ||
+                                    !botFeedback ||
+                                    !botFeedback[form.variables[0].input.name])
+                            "
                             class="text-red-500 text-sm mt-1"
                         >
                             {{ formErrors[form.variables[0].input.name] }}
                         </div>
+                        <!-- Фидбэк от бота для радио-кнопок -->
+                        <div
+                            v-if="
+                                form.usesBot &&
+                                botFeedback &&
+                                botFeedback[form.variables[0].input.name]
+                            "
+                            class="text-yellow-500 text-sm mt-1"
+                        >
+                            {{ botFeedback[form.variables[0].input.name].feedback }}
+                        </div>
                     </div>
                 </div>
 
+                <!-- Checkbox Group -->
                 <div
                     v-if="form.variables && form.variables[0]?.input?.type === 'checkbox'"
                     class="flex flex-col sm:flex-collumn sm:items-start sm:gap-4"
@@ -181,6 +205,12 @@ const handleFormSubmit = async (event) => {
                                     :name="variable.input.name"
                                     :value="variable.input.value"
                                     v-model="formData[variable.input.name]"
+                                    @change="
+                                        handleInput(
+                                            variable.input.name,
+                                            formData[variable.input.name],
+                                        )
+                                    "
                                     class="appearance-none rounded w-5 h-5 border-2 border-[#e05d2d] transition-all outline-none checked:bg-[#e05d2d]"
                                 />
                                 <label :for="variable.for" class="text-[#f5f5f5] cursor-pointer">{{
@@ -199,6 +229,7 @@ const handleFormSubmit = async (event) => {
                         >
                             {{ formErrors[form.variables[0].input.name] }}
                         </div>
+                        <!-- Фидбэк от бота для чекбоксов -->
                         <div
                             v-if="
                                 form.usesBot &&
@@ -212,6 +243,7 @@ const handleFormSubmit = async (event) => {
                     </div>
                 </div>
 
+                <!-- Select with Groups -->
                 <div v-if="form.groups" class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
                     <label
                         :for="form.for"
@@ -244,6 +276,7 @@ const handleFormSubmit = async (event) => {
                     </select>
                 </div>
 
+                <!-- Simple Select (without groups) -->
                 <div
                     v-if="form.components && !form.groups"
                     class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
@@ -267,6 +300,7 @@ const handleFormSubmit = async (event) => {
                     </select>
                 </div>
 
+                <!-- Calendar Component -->
                 <div
                     v-if="form.customComponent === 'Calendar'"
                     class="flex flex-col sm:flex-row sm:items-start sm:gap-4"
@@ -290,6 +324,7 @@ const handleFormSubmit = async (event) => {
                     </div>
                 </div>
 
+                <!-- Textarea -->
                 <div v-if="form.textarea" class="flex flex-col sm:flex-row sm:items-start sm:gap-4">
                     <label
                         :for="form.for"
@@ -323,6 +358,7 @@ const handleFormSubmit = async (event) => {
                     </div>
                 </div>
 
+                <!-- Buttons -->
                 <template v-if="form.controller">
                     <div class="flex flex-col sm:flex-row gap-3 mt-4">
                         <input
