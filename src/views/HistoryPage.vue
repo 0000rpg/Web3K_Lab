@@ -11,12 +11,8 @@ onMounted(() => {
 
 <template>
     <main
-        class="flex flex-row flex-wrap items-start min-w-[90%] min-h-[70vh] justify-center lg:max-w-[80%] text-white"
+        class="flex flex-row flex-wrap items-start min-w-full min-h-[70vh] justify-center lg:max-w-[80%] text-white"
     >
-        <canvas
-            class="background fixed top-0 left-0 w-screen h-screen z-[-1000] pointer-events-none"
-        ></canvas>
-
         <section
             class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"
         >

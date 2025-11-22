@@ -12,10 +12,14 @@ const timeTable = ref({
     year: '2020',
     time: '01:01:01',
     sumDate: '',
+    second: 0,
 });
 
 const isModalOpen = ref(false);
+const popupTimer = ref(10);
 const modalPosition = ref({ top: 0, left: 0 });
+const isHoveringNav = ref(false);
+const isHoveringModal = ref(false);
 
 // Навигационные данные
 const navButtons = ref([
@@ -69,6 +73,7 @@ function updateClock() {
         year,
         time: `${hour}:${minute}:${second}`,
         sumDate: `${date}, ${months[month]} ${year}г.`,
+        second,
     };
 }
 
@@ -82,14 +87,18 @@ function headerScroll(e) {
 
 function handleHobbyClick(e, button) {
     if (button.hasModal) {
-        //e.preventDefault();
-        toggleModal(e.target);
+        popupTimer.value = 10;
+        if (isModalOpen.value == false) {
+            toggleModal(e.target);
+        }
     }
 }
 
-function handleHobbyDblClick(button) {
-    if (button.hasModal) {
-        router.push(button.path);
+function triggerCloseModal() {
+    if (popupTimer.value <= 0) {
+        closeModal();
+    } else {
+        popupTimer.value--;
     }
 }
 
@@ -100,13 +109,14 @@ function toggleModal(element) {
     if (isModalOpen.value) {
         const rect = element.getBoundingClientRect();
         modalPosition.value = {
-            top: rect.bottom + 9,
+            top: rect.bottom + 15,
             left: rect.left - 12,
         };
     }
 }
 
 function closeModal() {
+    popupTimer.value = 0;
     isModalOpen.value = false;
 }
 
@@ -130,24 +140,54 @@ function updateModalPosition() {
         if (element) {
             const rect = element.getBoundingClientRect();
             modalPosition.value = {
-                top: rect.bottom + 9,
+                top: rect.bottom + 15,
                 left: rect.left - 12,
             };
         }
     }
 }
 
+// Проверка, находится ли курсор над навигацией или модальным окном
+function checkHoverState() {
+    if (!isHoveringNav.value && !isHoveringModal.value) {
+        closeModal();
+    }
+}
+
+// Обработчики для навигации
+function handleNavMouseEnter() {
+    isHoveringNav.value = true;
+}
+
+function handleNavMouseLeave() {
+    isHoveringNav.value = false;
+    // Используем setTimeout чтобы дать время на переход между элементами
+    setTimeout(checkHoverState, 100);
+}
+
+// Обработчики для модального окна
+function handleModalMouseEnter() {
+    isHoveringModal.value = true;
+}
+
+function handleModalMouseLeave() {
+    isHoveringModal.value = false;
+    // Используем setTimeout чтобы дать время на переход между элементами
+    setTimeout(checkHoverState, 100);
+}
+
 // Хуки жизненного цикла
 onMounted(() => {
     updateClock();
     const clockInterval = setInterval(updateClock, 1000);
+    const closeModalInterval = setInterval(triggerCloseModal, 1000);
 
     window.addEventListener('resize', updateModalPosition);
     window.addEventListener('scroll', updateModalPosition);
 
-    // Очистка при размонтировании компонента
     onUnmounted(() => {
         clearInterval(clockInterval);
+        clearInterval(closeModalInterval);
         window.removeEventListener('resize', updateModalPosition);
         window.removeEventListener('scroll', updateModalPosition);
     });
@@ -163,9 +203,11 @@ onMounted(() => {
                 headLogoActive: isHomePage,
                 'text-[#ed6c21] hover:text-[#ed6c21]': isHomePage,
             }"
+            @wheel="headerScroll"
         />
         <ul
-            @wheel="headerScroll"
+            @mouseenter="handleNavMouseEnter"
+            @mouseleave="handleNavMouseLeave"
             class="flex flex-row flex-nowrap justify-between overflow-x-auto overflow-y-hidden mt-2 list-none p-0 m-0 box-border touch-pan-x scrollbar-orange z-100499"
         >
             <li
@@ -184,7 +226,7 @@ onMounted(() => {
                         ),
                     }"
                     @click="(e) => button.hasModal && handleHobbyClick(e, button)"
-                    @dblclick="() => button.hasModal && handleHobbyDblClick(button)"
+                    @mouseover="(e) => button.hasModal && handleHobbyClick(e, button)"
                     class="no-underline relative transition-colors duration-300 after:content-[''] after:absolute after:left-1/2 after:-bottom-1 after:w-0 after:h-0.5 after:bg-[#e05d2d] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
                 >
                     {{ button.name }}
@@ -199,12 +241,14 @@ onMounted(() => {
 
         <!-- Модальное меню для хобби -->
         <ul
-            v-if="isModalOpen"
+            v-show="isModalOpen"
             :style="{
                 top: `${modalPosition.top}px`,
                 left: `${modalPosition.left}px`,
             }"
-            class="fixed flex flex-col pt-2 min-w-fit text-xl bg-[#18191a] border border-[#5c5c5c] border-t-0 rounded-b-xl mt-3"
+            @mouseenter="handleModalMouseEnter"
+            @mouseleave="handleModalMouseLeave"
+            class="fixed flex flex-col pt-2 min-w-fit text-xl bg-[#18191a] border border-[#5c5c5c] border-t-0 rounded-b-xl mt-3 z-100500"
         >
             <li v-for="anchor in hobbyAnchors" :key="anchor.anchor" class="mx-2 my-0.5 px-2 py-0.5">
                 <a

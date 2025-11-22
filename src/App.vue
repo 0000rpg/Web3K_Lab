@@ -1,11 +1,22 @@
 <script setup>
 import BackGround from '@/components/BackGround.vue';
 import HeaderVue from '@/components/HeaderBlock.vue';
+import H1Vue from '@/components/PageTitle.vue';
+import { storeToRefs } from 'pinia';
+
+import { usePageTitle } from '@/stores/page-title';
+
+const packedPageTitle = usePageTitle();
+
+const { pageH1 } = storeToRefs(packedPageTitle);
 </script>
 
 <template>
     <header>
-        <h1 id="start" class="text-center mt-12">Главная страница - изменения</h1>
+        <h1 id="start" class="text-center mt-30 text-4xl text-white font-semibold">
+            Главная страница - изменения {{ pageH1 }}
+        </h1>
+        <H1Vue />
         <div
             class="headerField fixed top-0 left-0 bg-[#18191a] z-100500 w-full pb-1 m-0 border-b border-[#5c5c5c]"
         >
