@@ -109,7 +109,7 @@ function toggleModal(element) {
     if (isModalOpen.value) {
         const rect = element.getBoundingClientRect();
         modalPosition.value = {
-            top: rect.bottom + 15,
+            top: rect.bottom + 9,
             left: rect.left - 12,
         };
     }
@@ -140,7 +140,7 @@ function updateModalPosition() {
         if (element) {
             const rect = element.getBoundingClientRect();
             modalPosition.value = {
-                top: rect.bottom + 15,
+                top: rect.bottom + 9,
                 left: rect.left - 12,
             };
         }
@@ -208,7 +208,7 @@ onMounted(() => {
         <ul
             @mouseenter="handleNavMouseEnter"
             @mouseleave="handleNavMouseLeave"
-            class="flex flex-row flex-nowrap justify-between overflow-x-auto overflow-y-hidden mt-2 list-none p-0 m-0 box-border touch-pan-x scrollbar-orange z-100499"
+            class="flex flex-row flex-nowrap justify-between overflow-x-auto overflow-y-hidden mt-2 list-none p-0 m-0 box-border touch-pan-x scrollbar-orange z-100500"
         >
             <li
                 v-for="button in navButtons"
@@ -248,7 +248,7 @@ onMounted(() => {
             }"
             @mouseenter="handleModalMouseEnter"
             @mouseleave="handleModalMouseLeave"
-            class="fixed flex flex-col pt-2 min-w-fit text-xl bg-[#18191a] border border-[#5c5c5c] border-t-0 rounded-b-xl mt-3 z-100500"
+            class="fixed flex flex-col pt-2 min-w-fit text-xl bg-[#18191a] border border-[#5c5c5c] border-t-0 rounded-b-xl mt-3 z-100499"
         >
             <li v-for="anchor in hobbyAnchors" :key="anchor.anchor" class="mx-2 my-0.5 px-2 py-0.5">
                 <a

@@ -188,7 +188,7 @@ const handleFormSubmit = async (event) => {
                 <!-- Checkbox Group -->
                 <div
                     v-if="form.variables && form.variables[0]?.input?.type === 'checkbox'"
-                    class="flex flex-col sm:flex-collumn sm:items-start sm:gap-4"
+                    class="flex flex-col gap-4 justify-center items-center"
                 >
                     <div
                         class="text-[#f5f5f5] font-bold mb-1 border-b border-[#5c5c5c] p-2 min-w-[25%]"

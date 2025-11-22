@@ -1,13 +1,13 @@
 <script setup>
-import { useRoute } from 'vue-router';
+import { usePageTitle } from '@/stores/page-title';
+import { storeToRefs } from 'pinia';
 
-const route = useRoute();
-const pageH1 = route.title || '';
-console.log(route);
+const pageTitleStore = usePageTitle();
+const { pageH1 } = storeToRefs(pageTitleStore);
 </script>
 
 <template>
-    <h1 id="start" class="text-center mt-30 text-4xl text-white font-semibold">
+    <h1 v-if="pageH1" id="start" class="text-center mt-30 text-4xl text-white font-semibold">
         {{ pageH1 }}
     </h1>
 </template>

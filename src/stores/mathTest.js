@@ -79,6 +79,7 @@ export const useMathTest = defineStore('mathTest', () => {
         },
         {
             title: 'Вопрос 2: Интегралы',
+            label: 'Выберите один или несколько ответов ',
             context: 'Выберите правильные утверждения об интегралах:',
             required: true,
             variables: [

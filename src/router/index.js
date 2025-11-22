@@ -7,70 +7,94 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: Home, // It stays dynamic only for demonstration of another type of invoke.
-            title: 'Главная страница - изменения',
+            component: Home,
+            meta: {
+                title: 'Главная страница - изменения',
+                h1: 'Главная страница - изменения',
+            },
         },
         {
             path: '/main',
             name: 'main',
             component: () => import('../views/MainPage.vue'),
-            title: 'Главная страница - навигация',
+            meta: {
+                title: 'Главная страница - навигация',
+                h1: 'Главная страница - навигация',
+            },
         },
         {
             path: '/about',
             name: 'about',
             component: () => import('../views/AboutMe.vue'),
-            title: 'Информация об авторе',
+            meta: {
+                title: 'Информация об авторе',
+                h1: 'Информация об авторе',
+            },
         },
         {
             path: '/chatbot',
             name: 'chatbot',
             component: () => import('../views/ChatbotPage.vue'),
-            title: '',
+            meta: {
+                title: 'Чат-бот',
+                h1: '',
+            },
         },
         {
             path: '/contacts',
             name: 'contacts',
             component: () => import('../views/ContactsPage.vue'),
-            title: 'Контакты',
+            meta: {
+                title: 'Контакты',
+                h1: 'Контакты',
+            },
         },
         {
             path: '/history',
             name: 'history',
             component: () => import('../views/HistoryPage.vue'),
-            title: 'История просмотров',
+            meta: {
+                title: 'История просмотров',
+                h1: 'История просмотров',
+            },
         },
         {
             path: '/math',
             name: 'math',
             component: () => import('../views/MathTest.vue'),
-            title: 'Тест по высшей математике',
+            meta: {
+                title: 'Тест по высшей математике',
+                h1: 'Тест по высшей математике',
+            },
         },
         {
             path: '/hobby',
             name: 'hobby',
             component: () => import('../views/MyHobby.vue'),
-            title: 'Мои интересы',
+            meta: {
+                title: 'Мои интересы',
+                h1: 'Мои интересы',
+            },
         },
         {
             path: '/album',
             name: 'album',
             component: () => import('../views/PhotoAlbum.vue'),
-            title: 'Фотоальбом',
+            meta: {
+                title: 'Фотоальбом',
+                h1: 'Фотоальбом',
+            },
         },
         {
             path: '/study',
             name: 'study',
             component: () => import('../views/StudyPage.vue'),
-            title: 'Учёба',
+            meta: {
+                title: 'Учёба',
+                h1: 'Учёба',
+            },
         },
     ],
-});
-
-router.beforeEach((to) => {
-    if (to.title) {
-        document.title = to.title;
-    }
 });
 
 export default router;
