@@ -1,4 +1,3 @@
-// hooks/useTextGenerator.js
 import { useTextGenerationStore } from '@/stores/text-generation';
 import { ref, computed } from 'vue';
 
