@@ -97,7 +97,7 @@ setupLatexCopy();
         <article
             class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden text-white p-0"
         >
-            <div class="w-full bg-[rgba(43,45,48,0.8)] p-4 rounded-lg">
+            <div class="w-full bg-[rgba(43,45,48,0.8)] p-0 rounded-lg">
                 <h3
                     class="bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center rounded-t-lg"
                 >
@@ -110,7 +110,7 @@ setupLatexCopy();
                     </p>
                 </div>
 
-                <div class="memory-options flex gap-4 justify-center mb-4">
+                <div class="memory-options flex gap-4 justify-center mb-4 p-4">
                     <label class="flex items-center text-white">
                         <input
                             type="radio"
@@ -118,7 +118,7 @@ setupLatexCopy();
                             :value="false"
                             v-model="useLocalStorage"
                             @change="chatStore.updateMemoryType"
-                            class="w-5 h-5 rounded-full border-2 border-[#b3b3b3] transition-all duration-200 checked:border-4 checked:border-[#ed6c21] mr-2"
+                            class="flex flex-col sm:flex-row sm:items-start sm:gap-4"
                         />
                         Память сессии (до перезагрузки)
                     </label>
@@ -129,7 +129,7 @@ setupLatexCopy();
                             :value="true"
                             v-model="useLocalStorage"
                             @change="chatStore.updateMemoryType"
-                            class="w-5 h-5 rounded-full border-2 border-[#b3b3b3] transition-all duration-200 checked:border-4 checked:border-[#ed6c21] mr-2"
+                            class="flex flex-col sm:flex-row sm:items-start sm:gap-4"
                         />
                         Постоянная память (после перезагрузки)
                     </label>
@@ -172,7 +172,7 @@ setupLatexCopy();
                     />
                 </div>
 
-                <div class="input-group mb-4">
+                <div class="input-group mb-4 p-4">
                     <label for="user-input" class="text-white mb-2">Ваше сообщение:</label>
                     <textarea
                         id="user-input"
@@ -180,19 +180,21 @@ setupLatexCopy();
                         @keypress="handleKeyPress"
                         placeholder="Введите ваш вопрос или сообщение..."
                         :disabled="isGenerating"
-                        class="p-2 bg-[rgba(43,45,48,0.8)] text-white border border-[#5c5c5c] rounded-lg focus:border-[#ed6c21] outline-none min-h-[100px] font-serif text-lg"
+                        class="bg-[#1c1e21] border border-[#5c5c5c] rounded-xl p-3 text-[#f5f5f5] text-base transition-colors focus:outline-none focus:border-[#e05d2d] focus:ring-2 focus:ring-[#e05d2d] focus:ring-opacity-20 resize-y min-h-[100px] w-full"
                     ></textarea>
                 </div>
 
-                <button
-                    @click="chatStore.sendMessage"
-                    :disabled="isGenerating"
-                    class="bg-[#ed6c21] text-white border-none rounded-full py-3 px-6 text-lg transition-all duration-300 hover:bg-[#e05d2d] disabled:opacity-50 disabled:cursor-not-allowed m-2"
-                >
-                    {{ isGenerating ? 'Генерация...' : 'Отправить сообщение' }}
-                </button>
+                <div class="w-full p-4">
+                    <button
+                        @click="chatStore.sendMessage"
+                        :disabled="isGenerating"
+                        class="bg-[#ed6c21] text-white border-none p-4 rounded-full text-md transition-all duration-300 hover:bg-[#e05d2d] disabled:opacity-50 disabled:cursor-not-allowed w-full"
+                    >
+                        {{ isGenerating ? 'Генерация...' : 'Отправить сообщение' }}
+                    </button>
+                </div>
 
-                <div class="session-controls flex gap-2 justify-center mt-4">
+                <div class="session-controls flex gap-2 justify-center mt-4 p-4">
                     <button
                         @click="chatStore.clearHistory"
                         class="bg-[rgba(123,123,123,0.185)] text-white border border-[#5c5c5c] rounded-full py-2 px-4 flex-1 transition-all duration-300 hover:border-[#757575] hover:scale-105"
@@ -225,14 +227,14 @@ setupLatexCopy();
                 </div>
             </div>
 
-            <div class="bg-[rgba(43,45,48,0.8)] p-4 rounded-lg w-full">
+            <div class="bg-[rgba(43,45,48,0.8)] p-0 rounded-lg w-full">
                 <h3
-                    class="bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center rounded-t-lg"
+                    class="bg-[#18191a] p-4 m-0 border-b border-t border-[#5c5c5c] text-white text-center"
                 >
                     Диалог:
                 </h3>
                 <div
-                    class="chat-container border border-[#5c5c5c] rounded-lg bg-[rgba(43,45,48,0.8)] overflow-y-auto max-h-[60vh] m-2 scrollbar-orange"
+                    class="chat-container bg-[rgba(43,45,48,0.8)] overflow-y-auto max-h-[60vh] m-2 scrollbar-orange"
                     ref="chatContainer"
                 >
                     <div

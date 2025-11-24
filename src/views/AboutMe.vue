@@ -29,7 +29,7 @@ onUnmounted(() => {
         class="flex flex-row flex-wrap items-start min-w-[90%] min-h-[70vh] justify-center lg:max-w-[80%] text-white"
     >
         <section
-            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"
+            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white mt-20"
         >
             <h2
                 class="w-full bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center"

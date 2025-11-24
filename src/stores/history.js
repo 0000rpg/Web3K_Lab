@@ -53,7 +53,6 @@ export const useHistoryStore = defineStore('history', () => {
         const pathParts = cleanPath.split('/').filter((part) => part);
         const lastPart = pathParts[pathParts.length - 1];
 
-        // Преобразуем kebab-case в нормальный текст
         return lastPart
             .split('-')
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))

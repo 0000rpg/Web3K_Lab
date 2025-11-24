@@ -11,7 +11,7 @@ const { textExamples, notesText, navRoutes } = storeToRefs(homeStore);
         class="flex flex-row flex-wrap items-start min-w-full min-h-[70vh] justify-center lg:max-w-[80%] text-white"
     >
         <section
-            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden text-center m-2"
+            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden text-center m-2 mt-20"
         >
             <h2 class="w-full bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c]">
                 Текущая версия страницы - 2.1.2

@@ -78,10 +78,7 @@ function updateClock() {
 }
 
 function headerScroll(e) {
-    if (e.deltaY !== 0) {
-        e.preventDefault();
-        e.currentTarget.scrollLeft += e.deltaY;
-    }
+    e.currentTarget.scrollLeft += e.deltaY;
     updateModalPosition();
 }
 
@@ -203,11 +200,11 @@ onMounted(() => {
                 headLogoActive: isHomePage,
                 'text-[#ed6c21] hover:text-[#ed6c21]': isHomePage,
             }"
-            @wheel="headerScroll"
         />
         <ul
             @mouseenter="handleNavMouseEnter"
             @mouseleave="handleNavMouseLeave"
+            @wheel.prevent="headerScroll"
             class="flex flex-row flex-nowrap justify-between overflow-x-auto overflow-y-hidden mt-2 list-none p-0 m-0 box-border touch-pan-x scrollbar-orange z-100500"
         >
             <li

@@ -1,4 +1,3 @@
-// stores/mathBot.js
 import { defineStore } from 'pinia';
 import { useTextGenerationStore } from './text-generation';
 

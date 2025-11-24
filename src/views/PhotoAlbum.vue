@@ -24,7 +24,7 @@ onUnmounted(() => {
     >
         <!-- Основная секция -->
         <section
-            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"
+            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white mt-20"
         >
             <h2
                 class="w-full bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center"
@@ -94,7 +94,7 @@ onUnmounted(() => {
         <!-- Модальное окно -->
         <div
             v-if="showModal"
-            class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 transition-opacity duration-300"
+            class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center transition-opacity duration-300 z-100501"
             @click="closeModal"
         >
             <!-- Кнопка закрытия -->

@@ -8,7 +8,7 @@ const { hobbySections, categories } = storeToRefs(hobbyStore);
 
 <template>
     <main
-        class="flex flex-row flex-wrap items-start min-w-full min-h-[70vh] justify-center lg:max-w-[80%] text-white mt-30"
+        class="flex flex-row flex-wrap items-start min-w-full min-h-[70vh] justify-center lg:max-w-[80%] text-white mt-20"
     >
         <section
             class="min-w-[60%] lg:max-w-[60%] bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"

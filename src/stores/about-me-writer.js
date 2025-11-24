@@ -10,7 +10,7 @@ export const useAboutMeAutoWriterStore = defineStore('aboutMeAutoWriter', () => 
 
     // Инициализация автописателя
     const initialize = (
-        apiKey = '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',
+        apiKey = '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',
     ) => {
         textGenerationStore.initialize(apiKey);
         textGenerationStore.createSession(SESSION_ID);

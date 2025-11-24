@@ -49,9 +49,7 @@ export const useTextGenerationStore = defineStore('textGeneration', () => {
                 headers,
                 onText: (chunk, fullText) => {
                     generatedText.value = fullText;
-                    // Пример простого прогресса (можно адаптировать под ваши нужды)
                     progress.value = Math.min(fullText.length / 1000, 1);
-                    // Вызов пользовательского колбека если есть
                     if (onText) onText(chunk, fullText);
                 },
                 onComplete: (fullText) => {

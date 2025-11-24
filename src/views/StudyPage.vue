@@ -10,69 +10,78 @@ const { tableOne, tableTwo } = studyStore;
         class="flex flex-row flex-wrap items-start min-w-[90%] min-h-[70vh] justify-center lg:max-w-[80%] text-white"
     >
         <section
-            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white mt-26"
+            class="min-w-[80%] bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white mt-20"
         >
             <h2
-                class="w-full bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center"
+                class="w-full bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-xl text-center"
             >
                 Информация об учебе
             </h2>
-            <div class="p-4">
+            <div class="p-4 text-center">
                 <p class="text-white mb-2">
                     Полное название университета: ФГАОУ ВО «СЕВАСТОПОЛЬСКИЙ ГОСУДАРСТВЕННЫЙ
                     УНИВЕРСИТЕТ»
                 </p>
                 <p class="text-white mb-4">Полное название кафедры: Информационные системы</p>
-                <h3 class="text-[#ed6c21] text-xl font-bold">Перечень изучаемых дисциплин</h3>
+                <h3 class="text-[#ed6c21] text-lg font-bold">Перечень изучаемых дисциплин</h3>
             </div>
         </section>
 
-        <!-- Первая таблица с grid layout -->
+        <!-- Первая таблица -->
         <section
-            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"
+            class="bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"
         >
-            <h2
-                class="w-full bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center"
-            >
-                Распределение часов по семестрам
-            </h2>
-            <div class="p-4">
-                <div class="border border-[#5c5c5c] rounded-[2em] overflow-hidden w-full">
+            <div class="p-0">
+                <div class="border border-[#5c5c5c] overflow-hidden w-full">
                     <!-- Заголовок таблицы -->
-                    <div class="bg-[#ed6c21] text-white font-semibold grid grid-cols-12 w-full">
-                        <div class="p-4 border-r border-[#5c5c5c] text-center col-span-1">№</div>
-                        <div class="p-4 border-r border-[#5c5c5c] text-center col-span-3">
-                            Дисциплина
-                        </div>
-                        <div class="p-2 border-r border-[#5c5c5c] text-center col-span-2 text-sm">
-                            1 курс 1 сем
-                        </div>
-                        <div class="p-2 border-r border-[#5c5c5c] text-center col-span-2 text-sm">
-                            1 курс 2 сем
-                        </div>
-                        <div class="p-2 border-r border-[#5c5c5c] text-center col-span-2 text-sm">
-                            2 курс 3 сем
-                        </div>
-                        <div class="p-2 text-center col-span-2 text-sm">2 курс 4 сем</div>
-                    </div>
-
-                    <!-- Подзаголовок с типами занятий -->
                     <div
-                        class="bg-[#e05d2d] text-white font-semibold grid grid-cols-12 w-full border-b border-[#5c5c5c]"
+                        class="bg-[#ed6c21] text-white font-semibold grid grid-cols-22 grid-rows-3 w-full items-center"
                     >
-                        <div class="p-2 border-r border-[#5c5c5c] text-center col-span-4 text-sm">
-                            Часов в неделю
+                        <div
+                            class="p-4 border-r border-[#5c5c5c] text-center col-span-2 row-span-3 min-h-full"
+                        >
+                            №
                         </div>
-                        <div class="p-1 border-r border-[#5c5c5c] text-center text-xs col-span-2">
-                            Лек/Лаб/Прак
+                        <div
+                            class="p-4 border-r border-[#5c5c5c] text-center col-span-8 row-span-3 min-h-full"
+                        >
+                            Часов в неделю (Лекций, Лаб.раб, Практ. раб)
                         </div>
-                        <div class="p-1 border-r border-[#5c5c5c] text-center text-xs col-span-2">
-                            Лек/Лаб/Прак
+                        <div
+                            class="bg-[#ed6c21] text-white font-semibold grid grid-cols-12 w-full col-span-12 row-span-3"
+                        >
+                            <div
+                                class="p-2 border-r border-[#5c5c5c] text-center col-span-12 text-sm"
+                            >
+                                Часов в неделю
+                            </div>
+                            <div
+                                class="p-2 border-r border-t border-b border-[#5c5c5c] text-center col-span-6 text-sm"
+                            >
+                                1 курс
+                            </div>
+                            <div
+                                class="p-2 border-t border-b border-[#5c5c5c] text-center col-span-6 text-sm"
+                            >
+                                2 курс
+                            </div>
+                            <div
+                                class="p-2 border-r border-[#5c5c5c] text-center col-span-3 text-sm"
+                            >
+                                1 сем
+                            </div>
+                            <div
+                                class="p-2 border-r border-[#5c5c5c] text-center col-span-3 text-sm"
+                            >
+                                2 сем
+                            </div>
+                            <div
+                                class="p-2 border-r border-[#5c5c5c] text-center col-span-3 text-sm"
+                            >
+                                3 сем
+                            </div>
+                            <div class="p-2 text-center col-span-3 text-sm">4 сем</div>
                         </div>
-                        <div class="p-1 border-r border-[#5c5c5c] text-center text-xs col-span-2">
-                            Лек/Лаб/Прак
-                        </div>
-                        <div class="p-1 text-center text-xs col-span-2">Лек/Лаб/Прак</div>
                     </div>
 
                     <!-- Данные таблицы -->
@@ -80,12 +89,12 @@ const { tableOne, tableTwo } = studyStore;
                         <div
                             v-for="(row, index) in tableOne.rows"
                             :key="row.id"
-                            class="grid grid-cols-12 border-b border-[#5c5c5c] even:bg-[rgba(45,47,51,0.8)] w-full"
+                            class="grid grid-cols-22 border-b border-[#5c5c5c] even:bg-[rgba(45,47,51,0.8)] w-full"
                         >
-                            <div class="p-4 border-r border-[#5c5c5c] text-center col-span-1">
+                            <div class="p-4 border-r border-[#5c5c5c] text-center col-span-2">
                                 {{ index + 1 }}
                             </div>
-                            <div class="p-4 border-r border-[#5c5c5c] text-left col-span-3">
+                            <div class="p-4 border-r border-[#5c5c5c] text-left col-span-8">
                                 {{ row.subject }}
                             </div>
 
@@ -114,14 +123,9 @@ const { tableOne, tableTwo } = studyStore;
 
         <!-- Вторая таблица -->
         <section
-            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"
+            class="bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"
         >
-            <h2
-                class="w-full bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center"
-            >
-                План учебного процесса
-            </h2>
-            <div class="p-4">
+            <div class="p-0">
                 <div class="overflow-x-auto border border-[#5c5c5c] rounded-[2em] w-full">
                     <table
                         class="w-full border-collapse max-w-[1100px] mx-auto text-sm table-fixed"
