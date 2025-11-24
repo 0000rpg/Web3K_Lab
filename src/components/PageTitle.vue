@@ -7,7 +7,11 @@ const { pageH1 } = storeToRefs(pageTitleStore);
 </script>
 
 <template>
-    <h1 v-if="pageH1" id="start" class="text-center mt-30 text-4xl text-white font-semibold">
+    <h1
+        v-if="pageH1"
+        id="start"
+        class="text-center mt-30 text-4xl text-white font-semibold min-w-400"
+    >
         {{ pageH1 }}
     </h1>
 </template>

@@ -80,111 +80,171 @@ setupLatexCopy();
 </script>
 
 <template>
-    <main>
-        <section class="mainTheme">
-            <p>Панель для просмотра</p>
+    <main
+        class="flex flex-row flex-wrap items-start min-w-[90%] min-h-[70vh] justify-center lg:max-w-[80%] text-white"
+    >
+        <section
+            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"
+        >
+            <h2
+                class="w-full bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center"
+            >
+                Панель для просмотра
+            </h2>
+            <p class="text-white text-center p-4">Чат-бот для общения с AI моделью</p>
         </section>
-        <article>
-            <div class="container">
-                <h3>Чат-бот</h3>
-                <div class="model-info">
-                    <h4>Используемая модель:</h4>
-                    <p><strong>openai/gpt-oss-20b:free</strong> - бесплатная модель</p>
+
+        <article
+            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden text-white p-0"
+        >
+            <div class="w-full bg-[rgba(43,45,48,0.8)] p-4 rounded-lg">
+                <h3
+                    class="bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center rounded-t-lg"
+                >
+                    Чат-бот
+                </h3>
+                <div class="model-info bg-[rgba(43,45,48,0.8)] p-4 rounded-lg m-2">
+                    <h4 class="text-[#ed6c21] text-center mb-2">Используемая модель:</h4>
+                    <p class="text-white text-center">
+                        <strong>openai/gpt-oss-20b:free</strong> - бесплатная модель
+                    </p>
                 </div>
 
-                <div class="memory-options">
-                    <label>
+                <div class="memory-options flex gap-4 justify-center mb-4">
+                    <label class="flex items-center text-white">
                         <input
                             type="radio"
                             name="memory-type"
                             :value="false"
                             v-model="useLocalStorage"
                             @change="chatStore.updateMemoryType"
+                            class="w-5 h-5 rounded-full border-2 border-[#b3b3b3] transition-all duration-200 checked:border-4 checked:border-[#ed6c21] mr-2"
                         />
                         Память сессии (до перезагрузки)
                     </label>
-                    <label>
+                    <label class="flex items-center text-white">
                         <input
                             type="radio"
                             name="memory-type"
                             :value="true"
                             v-model="useLocalStorage"
                             @change="chatStore.updateMemoryType"
+                            class="w-5 h-5 rounded-full border-2 border-[#b3b3b3] transition-all duration-200 checked:border-4 checked:border-[#ed6c21] mr-2"
                         />
                         Постоянная память (после перезагрузки)
                     </label>
                 </div>
 
-                <div class="input-group api-key" v-show="false">
-                    <label for="api-key">API ключ:</label>
+                <div class="input-group api-key hidden">
+                    <label for="api-key" class="text-white mb-2">API ключ:</label>
                     <input
                         type="text"
                         id="api-key"
                         v-model="apiKey"
                         placeholder="Введите ваш API ключ"
+                        class="p-2 bg-[rgba(43,45,48,0.8)] text-white border border-[#5c5c5c] rounded-lg focus:border-[#ed6c21] outline-none"
                     />
                 </div>
 
-                <div class="input-group site-url" v-show="false">
-                    <label for="site-url">URL вашего сайта (опционально):</label>
+                <div class="input-group site-url hidden">
+                    <label for="site-url" class="text-white mb-2"
+                        >URL вашего сайта (опционально):</label
+                    >
                     <input
                         type="text"
                         id="site-url"
                         v-model="siteUrl"
                         placeholder="https://example.com"
+                        class="p-2 bg-[rgba(43,45,48,0.8)] text-white border border-[#5c5c5c] rounded-lg focus:border-[#ed6c21] outline-none"
                     />
                 </div>
 
-                <div class="input-group site-name" v-show="false">
-                    <label for="site-name">Название сайта (опционально):</label>
-                    <input type="text" id="site-name" v-model="siteName" placeholder="Мой сайт" />
+                <div class="input-group site-name hidden">
+                    <label for="site-name" class="text-white mb-2"
+                        >Название сайта (опционально):</label
+                    >
+                    <input
+                        type="text"
+                        id="site-name"
+                        v-model="siteName"
+                        placeholder="Мой сайт"
+                        class="p-2 bg-[rgba(43,45,48,0.8)] text-white border border-[#5c5c5c] rounded-lg focus:border-[#ed6c21] outline-none"
+                    />
                 </div>
 
-                <div class="input-group">
-                    <label for="user-input">Ваше сообщение:</label>
+                <div class="input-group mb-4">
+                    <label for="user-input" class="text-white mb-2">Ваше сообщение:</label>
                     <textarea
                         id="user-input"
                         v-model="userInput"
                         @keypress="handleKeyPress"
                         placeholder="Введите ваш вопрос или сообщение..."
                         :disabled="isGenerating"
+                        class="p-2 bg-[rgba(43,45,48,0.8)] text-white border border-[#5c5c5c] rounded-lg focus:border-[#ed6c21] outline-none min-h-[100px] font-serif text-lg"
                     ></textarea>
                 </div>
 
-                <button @click="chatStore.sendMessage" :disabled="isGenerating">
+                <button
+                    @click="chatStore.sendMessage"
+                    :disabled="isGenerating"
+                    class="bg-[#ed6c21] text-white border-none rounded-full py-3 px-6 text-lg transition-all duration-300 hover:bg-[#e05d2d] disabled:opacity-50 disabled:cursor-not-allowed m-2"
+                >
                     {{ isGenerating ? 'Генерация...' : 'Отправить сообщение' }}
                 </button>
 
-                <div class="session-controls">
-                    <button @click="chatStore.clearHistory">Очистить историю</button>
-                    <button @click="chatStore.saveSession">Сохранить сессию</button>
-                    <button @click="chatStore.loadSession">Загрузить сессию</button>
+                <div class="session-controls flex gap-2 justify-center mt-4">
+                    <button
+                        @click="chatStore.clearHistory"
+                        class="bg-[rgba(123,123,123,0.185)] text-white border border-[#5c5c5c] rounded-full py-2 px-4 flex-1 transition-all duration-300 hover:border-[#757575] hover:scale-105"
+                    >
+                        Очистить историю
+                    </button>
+                    <button
+                        @click="chatStore.saveSession"
+                        class="bg-[rgba(123,123,123,0.185)] text-white border border-[#5c5c5c] rounded-full py-2 px-4 flex-1 transition-all duration-300 hover:border-[#757575] hover:scale-105"
+                    >
+                        Сохранить сессию
+                    </button>
+                    <button
+                        @click="chatStore.loadSession"
+                        class="bg-[rgba(123,123,123,0.185)] text-white border border-[#5c5c5c] rounded-full py-2 px-4 flex-1 transition-all duration-300 hover:border-[#757575] hover:scale-105"
+                    >
+                        Загрузить сессию
+                    </button>
                 </div>
 
                 <div
-                    class="status"
+                    class="status mt-4 p-3 rounded-lg text-center min-h-[3em]"
                     :class="{
-                        info: status,
-                        error: status && status.includes('Ошибка'),
+                        'bg-[rgba(43,45,48,0.8)] text-white': status && !status.includes('Ошибка'),
+                        'bg-[#18191a] text-[#e05d2d]': status && status.includes('Ошибка'),
+                        hidden: !status,
                     }"
                 >
                     {{ status }}
                 </div>
             </div>
 
-            <div class="container">
-                <h3>Диалог:</h3>
-                <div class="chat-container" ref="chatContainer">
+            <div class="bg-[rgba(43,45,48,0.8)] p-4 rounded-lg w-full">
+                <h3
+                    class="bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center rounded-t-lg"
+                >
+                    Диалог:
+                </h3>
+                <div
+                    class="chat-container border border-[#5c5c5c] rounded-lg bg-[rgba(43,45,48,0.8)] overflow-y-auto max-h-[60vh] m-2 scrollbar-orange"
+                    ref="chatContainer"
+                >
                     <div
                         v-for="(message, index) in messageHistory"
                         :key="index"
                         :class="[
-                            'message',
+                            'message p-4 m-2 rounded-lg transition-all duration-300 hover:translate-x-1',
                             message.role === 'user'
-                                ? 'user-message'
+                                ? 'bg-[#18191a] border-l-4 border-[#ed6c21]'
                                 : message.role === 'assistant'
-                                  ? 'assistant-message'
-                                  : 'error-message',
+                                  ? 'bg-[rgba(43,45,48,0.8)] border-l-4 border-[#757575]'
+                                  : 'bg-[#18191a] border-l-4 border-[#e05d2d] text-[#e05d2d]',
                         ]"
                         v-html="chatStore.formatMessage(message.content)"
                     ></div>
@@ -195,246 +255,44 @@ setupLatexCopy();
 </template>
 
 <style scoped>
-:root {
-    --theme: #ed6c21;
-    --header: #18191a;
-    --background: #1c1e21;
-    --text: #f5f5f5;
-    --snow: #ffffff;
-    --border-accent: #757575;
-    --border: #5c5c5c;
-    --marker: #b3b3b3;
-    --accent: #e05d2d;
-    --section: rgba(34, 36, 39, 0.8);
-    --aside-action: rgba(43, 45, 48, 0.8);
-    --button: rgba(123, 123, 123, 0.185);
-
-    --radius: 2em;
-    --padding: 1em;
-    --input-padding: 0.5em;
-    --button-padding: 0.5em 1em;
-    --message-padding: 0.5em 1em;
-    --message-margin: 0.5em 0.5em 0.5em;
+.scrollbar-orange::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
 }
 
-.container {
-    h3 {
-        margin-bottom: 0.8em;
-        text-align: center;
-        background-color: var(--header);
-        margin: 0;
-        padding: 0em 0.5em 0em 0.5em;
-        min-height: 3em;
-        min-width: 3em;
-        border: solid var(--border);
-        border-width: 0px 0px 1px 0px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        margin-bottom: 1em;
-    }
-    h4 {
-        margin-bottom: 0.8em;
-        text-align: center;
-        min-height: 2em;
-        color: var(--theme);
-        font-size: medium;
-    }
-    .model-info {
-        p {
-            text-align: center;
-        }
-        background-color: var(--aside-action);
-        border-radius: calc(var(--radius) / 4);
-        margin: 0.5em 0.5em 0.5em 0.5em;
-    }
-    .memory-options {
-        label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0;
-        }
-        input {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-
-            border-radius: 50%;
-            width: 1.2em;
-            height: 1.2em;
-            aspect-ratio: 1;
-
-            border: 2px solid var(--marker);
-            transition: 0.2s all linear;
-            outline: none;
-            margin-right: 5px;
-            margin-bottom: 2px;
-        }
-        input:checked {
-            border: 4px solid var(--theme);
-        }
-        display: flex;
-    }
-    .chatbot-block {
-        border: 1px solid var(--border);
-        overflow: hidden;
-    }
-
-    .input-group {
-        input[type='text'],
-        textarea {
-            padding: var(--input-padding);
-            background-color: var(--aside-action);
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: calc(var(--radius) / 4);
-            font-size: 1em;
-        }
-        input[type='text']:focus,
-        textarea:focus {
-            border-color: var(--theme);
-            outline: none;
-        }
-        textarea {
-            min-height: 5em;
-            font-size: 1.05em;
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-        }
-        max-width: 100%;
-        margin: 1em 0.5em 1em 0.5em;
-        display: flex;
-        flex-direction: column;
-    }
-    #send-button {
-        font-size: 1em;
-        margin: 0.5em;
-        padding: 0.5em;
-        border: 0px;
-        border-radius: 2em;
-        background-color: var(--theme);
-        color: var(--text);
-        transition:
-            0.1s ease,
-            left 0.1s ease;
-    }
-    #send-button:hover {
-        transform: scaleY(1.05);
-        transform: scaleX(1.01);
-        background-color: var(--accent);
-    }
-    .session-controls {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5em;
-        margin: 0.8em 0.5em 1em 0.5em;
-    }
-    .session-controls button {
-        flex: 1;
-        padding: 0.5em 0.1em 0.5em 0.1em;
-        background-color: var(--button);
-        border: 1px solid var(--border);
-        color: var(--text);
-        border-radius: var(--radius);
-        transition:
-            0.1s ease,
-            left 0.1s ease;
-    }
-    .session-controls button:hover {
-        background-color: var(--button);
-        border: 3px solid var(--border-accent);
-        transform: scale(1.02);
-    }
-    .chat-container {
-        margin: 1em 0.5em 0.5em 0.5em;
-        border: 1px solid var(--border);
-        border-radius: calc(var(--radius) / 4);
-        overflow-y: auto;
-        background-color: var(--aside-action);
-        max-width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-        scrollbar-color: var(--accent) transparent;
-        max-height: 80%;
-        @media all and (max-width: 500px) {
-            width: 100%;
-            border-radius: 0;
-            margin: 0;
-        }
-    }
-    .message {
-        margin: var(--message-margin);
-        padding: var(--message-padding);
-        border-radius: calc(var(--radius) / 4);
-        line-height: 1.5;
-    }
-
-    .user-message {
-        background-color: var(--header);
-        border-left: 3px solid var(--theme);
-    }
-
-    .assistant-message {
-        background-color: var(--aside-action);
-        border-left: 3px solid var(--border-accent);
-    }
-
-    .error-message {
-        background-color: var(--header);
-        border-left: 3px solid var(--accent);
-        color: var(--accent);
-    }
-    .status {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-        padding: 0.5em;
-        margin: 0.8em 0.5em 1em 0.5em;
-        min-height: 2em;
-        border-radius: calc(var(--radius) / 4);
-        visibility: collapse;
-    }
-    .status.info {
-        visibility: visible;
-        background-color: var(--aside-action);
-        color: var(--text);
-    }
-
-    .status.error {
-        visibility: visible;
-        background-color: var(--header);
-        color: var(--accent);
-    }
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-bottom: 1em;
-    overflow: hidden;
-    flex-grow: 100;
-    max-width: 100%;
-    width: 100%;
-    @media all and (max-width: 500px) {
-        order: 1;
-        width: 100%;
-        border-radius: 0;
-        margin: 0;
-    }
+.scrollbar-orange::-webkit-scrollbar-track {
+    background: #18191a;
+    border-radius: 10px;
 }
-/*LATEX */
-/* Улучшенные стили для математических выражений */
+
+.scrollbar-orange::-webkit-scrollbar-thumb {
+    background: #e05d2d;
+    border-radius: 10px;
+}
+
+.scrollbar-orange::-webkit-scrollbar-thumb:hover {
+    background: #ed6c21;
+}
+
+.scrollbar-orange {
+    scrollbar-width: thin;
+    scrollbar-color: #e05d2d #18191a;
+}
+</style>
+
+<style>
+/* Стили для форматирования сообщений */
 .katex-block {
     margin: 1.5em 0;
     padding: 1.5em;
-    background: linear-gradient(135deg, var(--aside-action) 0%, rgba(34, 36, 39, 0.8) 100%);
-    border: 1px solid var(--border);
+    background: linear-gradient(135deg, rgba(43, 45, 48, 0.8) 0%, rgba(34, 36, 39, 0.8) 100%);
+    border: 1px solid #5c5c5c;
     border-radius: 12px;
     overflow-x: auto;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
+    cursor: pointer;
 }
 
 .katex-block::before {
@@ -442,7 +300,7 @@ setupLatexCopy();
     position: absolute;
     top: -10px;
     left: 20px;
-    background: var(--theme);
+    background: #ed6c21;
     color: white;
     font-size: 0.8em;
     padding: 2px 8px;
@@ -457,22 +315,12 @@ setupLatexCopy();
     font-style: normal;
     border: 1px solid rgba(237, 108, 33, 0.3);
     margin: 0 0.2em;
+    cursor: pointer;
 }
 
-.latex-error {
-    background: rgba(224, 93, 45, 0.2);
-    color: var(--accent);
-    padding: 0.3em 0.6em;
-    border-radius: 4px;
-    border: 1px dashed var(--accent);
-    font-family: 'Courier New', monospace;
-    font-size: 0.9em;
-}
-
-/* Улучшенные стили для кода */
 .code-block {
-    background: var(--header);
-    border: 1px solid var(--border);
+    background: #18191a;
+    border: 1px solid #5c5c5c;
     border-radius: 8px;
     padding: 1.2em;
     margin: 1.2em 0;
@@ -485,21 +333,12 @@ setupLatexCopy();
     position: absolute;
     top: -10px;
     left: 15px;
-    background: var(--border-accent);
-    color: var(--text);
+    background: #757575;
+    color: #f5f5f5;
     font-size: 0.8em;
     padding: 2px 8px;
     border-radius: 4px;
     font-weight: bold;
-}
-
-.code-block code {
-    background: none;
-    padding: 0;
-    border: none;
-    font-family: 'Fira Code', 'Courier New', monospace;
-    font-size: 0.95em;
-    line-height: 1.4;
 }
 
 .inline-code {
@@ -511,12 +350,11 @@ setupLatexCopy();
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Улучшенные таблицы */
 .markdown-table {
     width: 100%;
     border-collapse: collapse;
     margin: 1.2em 0;
-    background: var(--aside-action);
+    background: rgba(43, 45, 48, 0.8);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -525,171 +363,61 @@ setupLatexCopy();
 .markdown-table th,
 .markdown-table td {
     padding: 0.8em 1em;
-    border: 1px solid var(--border);
+    border: 1px solid #5c5c5c;
     text-align: left;
+    color: white;
 }
 
 .markdown-table th {
-    background: var(--header);
+    background: #18191a;
     font-weight: bold;
-    color: var(--theme);
+    color: #ed6c21;
 }
 
-.markdown-table tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.03);
-}
-
-.markdown-table tr:hover {
-    background: rgba(237, 108, 33, 0.05);
-}
-
-.table-container {
-    overflow-x: auto;
-    margin: 1.2em 0;
-    border-radius: 8px;
-}
-
-/* Улучшенные списки */
-.markdown-list {
-    margin: 0.8em 0;
-    padding-left: 2.2em;
-}
-
-.markdown-list li {
-    margin: 0.4em 0;
-    line-height: 1.6;
-    position: relative;
-}
-
-.markdown-list li::before {
-    content: '';
-    position: absolute;
-    left: -1.2em;
-    top: 0.7em;
-    width: 6px;
-    height: 6px;
-    background: var(--theme);
-    border-radius: 50%;
-}
-
-/* Улучшенные блоки цитат */
 .markdown-blockquote {
-    border-left: 4px solid var(--theme);
+    border-left: 4px solid #ed6c21;
     margin: 1.2em 0;
     padding: 1em 1.5em;
-    background: linear-gradient(135deg, var(--aside-action) 0%, rgba(34, 36, 39, 0.6) 100%);
+    background: linear-gradient(135deg, rgba(43, 45, 48, 0.8) 0%, rgba(34, 36, 39, 0.6) 100%);
     border-radius: 0 8px 8px 0;
     font-style: italic;
     position: relative;
 }
 
-.markdown-blockquote::before {
-    content: '"';
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    font-size: 2em;
-    color: var(--theme);
-    opacity: 0.3;
-    font-family: serif;
-}
-
-/* Улучшенные параграфы */
-.markdown-paragraph {
-    line-height: 1.7;
-    margin: 0.8em 0;
-    text-align: justify;
-}
-
-.markdown-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin: 0.8em 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--border);
-}
-
 .markdown-link {
-    color: var(--theme);
+    color: #ed6c21;
     text-decoration: none;
-    border-bottom: 1px solid var(--theme);
+    border-bottom: 1px solid #ed6c21;
     transition: all 0.3s ease;
     padding: 0.1em 0.2em;
 }
 
 .markdown-link:hover {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
+    color: #e05d2d;
+    border-bottom-color: #e05d2d;
     background: rgba(237, 108, 33, 0.1);
     border-radius: 3px;
 }
 
-/* Улучшенные заголовки */
+/* Заголовки */
 .heading-1 {
     font-size: 2.2em;
     margin: 1em 0 0.5em 0;
-    color: var(--theme);
-    border-bottom: 2px solid var(--theme);
+    color: #ed6c21;
+    border-bottom: 2px solid #ed6c21;
     padding-bottom: 0.3em;
 }
 .heading-2 {
     font-size: 1.8em;
     margin: 1.2em 0 0.6em 0;
-    color: var(--theme);
+    color: #ed6c21;
 }
 .heading-3 {
     font-size: 1.4em;
     margin: 1em 0 0.5em 0;
-    color: var(--text);
-}
-.heading-4 {
-    font-size: 1.2em;
-    margin: 1em 0 0.5em 0;
-    color: var(--text);
-}
-.heading-5 {
-    font-size: 1.1em;
-    margin: 0.8em 0 0.4em 0;
-    color: var(--text);
-    font-style: italic;
-}
-.heading-6 {
-    font-size: 1em;
-    margin: 0.8em 0 0.4em 0;
-    color: var(--border-accent);
-    font-style: italic;
+    color: #f5f5f5;
 }
 
-.divider {
-    border: none;
-    border-top: 2px solid var(--border);
-    margin: 2em 0;
-    position: relative;
-}
-
-.divider::after {
-    content: '§';
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--background);
-    padding: 0 10px;
-    color: var(--border-accent);
-    font-size: 1.2em;
-}
-
-/* Анимации */
-.message {
-    transition: all 0.3s ease;
-}
-
-.message:hover {
-    transform: translateX(5px);
-}
-
-/* Адаптивность для мобильных */
 @media (max-width: 768px) {
     .katex-block {
         padding: 1em;
@@ -701,45 +429,11 @@ setupLatexCopy();
         font-size: 0.85em;
     }
 
-    .markdown-table th,
-    .markdown-table td {
-        padding: 0.6em 0.8em;
-    }
-
-    .code-block {
-        padding: 1em;
-        font-size: 0.9em;
-    }
-
     .heading-1 {
         font-size: 1.8em;
     }
     .heading-2 {
         font-size: 1.5em;
     }
-    .heading-3 {
-        font-size: 1.2em;
-    }
-}
-
-/* Подсветка синтаксиса (базовая) */
-.code-block .keyword {
-    color: #ff79c6;
-}
-.code-block .function {
-    color: #50fa7b;
-}
-.code-block .string {
-    color: #f1fa8c;
-}
-.code-block .comment {
-    color: #6272a4;
-    font-style: italic;
-}
-.code-block .number {
-    color: #bd93f9;
-}
-.code-block .operator {
-    color: #ff79c6;
 }
 </style>

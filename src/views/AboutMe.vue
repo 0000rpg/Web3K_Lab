@@ -1,55 +1,122 @@
 <script setup>
 import { useAboutMeStore } from '@/stores/aboutMe';
+import { useAboutMeAutoWriterStore } from '@/stores/about-me-writer';
 import { storeToRefs } from 'pinia';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 const aboutMeStore = useAboutMeStore();
+const aboutMeAutoWriterStore = useAboutMeAutoWriterStore();
 const { articles, autoBiography } = storeToRefs(aboutMeStore);
+
+const pageAutoWriterElement = ref(null);
+let cleanupFunction = null;
+
+onMounted(() => {
+    if (pageAutoWriterElement.value) {
+        cleanupFunction = aboutMeAutoWriterStore.setupAutoWriter(pageAutoWriterElement.value);
+    }
+});
+
+onUnmounted(() => {
+    if (cleanupFunction) {
+        cleanupFunction();
+    }
+});
 </script>
 
 <template>
-    <main>
-        <section class="mainTheme">
-            <h2>Автобиография</h2>
-            <div
-                v-for="container in autoBiography"
-                :key="container.id"
-                class="horizontal-container"
+    <main
+        class="flex flex-row flex-wrap items-start min-w-[90%] min-h-[70vh] justify-center lg:max-w-[80%] text-white"
+    >
+        <section
+            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"
+        >
+            <h2
+                class="w-full bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center"
             >
-                <div v-if="container.name">
-                    <h3 v-if="container.name">{{ container.name }}</h3>
-                    <template v-if="container.context">
-                        <p v-for="text in container.context" :key="text.id">{{ text }}</p>
-                    </template>
-                    <ul v-if="container.table">
-                        <li v-for="cell in container.table" :key="cell.id">
-                            <img :id="cell.img.id" :src="cell.img.src" />
-                            <div>{{ cell.text }}</div>
-                        </li>
-                    </ul>
-                </div>
-                <div v-if="container.img">
-                    <img :class="container.img.class" />
+                Автобиография
+            </h2>
+            <div class="p-4">
+                <div
+                    v-for="container in autoBiography"
+                    :key="container.id"
+                    class="horizontal-container flex flex-row m-4 border-b border-[#5c5c5c]"
+                >
+                    <div v-if="container.name" class="flex-grow">
+                        <h3 v-if="container.name" class="border-y border-[#5c5c5c] py-2 text-white">
+                            {{ container.name }}
+                        </h3>
+                        <template v-if="container.context">
+                            <p
+                                v-for="text in container.context"
+                                :key="text.id"
+                                class="text-white py-1"
+                            >
+                                {{ text }}
+                            </p>
+                        </template>
+                        <ul
+                            v-if="container.table"
+                            class="list-none p-0 m-0 flex flex-row flex-wrap justify-between mt-2"
+                        >
+                            <li
+                                v-for="cell in container.table"
+                                :key="cell.id"
+                                class="m-2 mx-2 my-1 px-2 py-1 rounded transition-all duration-200 hover:scale-110 flex items-center"
+                            >
+                                <img
+                                    :id="cell.img.id"
+                                    :src="cell.img.src"
+                                    class="h-8 w-12 m-2 min-w-10"
+                                />
+                                <div class="text-white whitespace-nowrap overflow-ellipsis">
+                                    {{ cell.text }}
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div v-if="container.img" class="flex-shrink-0">
+                        <img
+                            src="../assets/images/user.png"
+                            :class="container.img.class"
+                            class="user-logo w-3/5 min-w-[100px] aspect-square m-2 object-cover bg-cover"
+                        />
+                    </div>
                 </div>
             </div>
         </section>
-        <section>
-            <h2>Интересные факты</h2>
-            <div class="horizontal-container vertical">
-                <section v-for="article in articles" :key="article.id">
-                    <h3>{{ article.name }}</h3>
-                    <p v-if="article.caption">{{ article.caption }}</p>
-                    <div v-for="fact in article.facts" :key="fact.id">
-                        <h4>{{ fact.name }}</h4>
-                        <p>{{ fact.text }}</p>
-                    </div>
-                </section>
-                <div>
-                    <h3>IT</h3>
-                    <div
-                        id="page-autowriter"
-                        prompt="Привет, расскажи побольше интересных фактов о программировании или о каком-либо выбранном языке. Учти, что ты должен поразить профессионала в этой отрасли. Пиши без форматирования с хорошими отступами и без пояснений в виде диалога. Не пиши слова мне по типу понял тебя или хорошо..."
+
+        <section
+            class="w-full bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"
+        >
+            <h2
+                class="w-full bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center"
+            >
+                Интересные факты
+            </h2>
+            <div class="p-4">
+                <div class="horizontal-container vertical flex flex-col space-y-6">
+                    <section
+                        v-for="article in articles"
+                        :key="article.id"
+                        class="bg-[rgba(43,45,48,0.8)] p-4 rounded-lg"
                     >
-                        ???
+                        <h3 class="text-[#ed6c21] text-xl font-bold mb-3">{{ article.name }}</h3>
+                        <p v-if="article.caption" class="text-white mb-4">{{ article.caption }}</p>
+                        <div v-for="fact in article.facts" :key="fact.id" class="mb-4 last:mb-0">
+                            <h4 class="text-[#e05d2d] font-semibold mb-2">{{ fact.name }}</h4>
+                            <p class="text-white leading-relaxed">{{ fact.text }}</p>
+                        </div>
+                    </section>
+
+                    <div class="bg-[rgba(43,45,48,0.8)] p-4 rounded-lg">
+                        <h3 class="text-[#ed6c21] text-xl font-bold mb-3">IT</h3>
+                        <div
+                            ref="pageAutoWriterElement"
+                            class="page-autowriter min-h-[200px] cursor-pointer p-4 border-2 border-dashed border-[#5c5c5c] rounded-lg hover:border-[#ed6c21] transition-colors duration-200 text-justify leading-relaxed text-base text-white"
+                        >
+                            ???
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,87 +125,53 @@ const { articles, autoBiography } = storeToRefs(aboutMeStore);
 </template>
 
 <style scoped>
-.horizontal-container {
-    ul {
-        li {
-            margin: 1em 0.5em 1em 0.5em;
-            padding: 0.5em;
-            padding-bottom: 0.2em;
-            padding-top: 0.2em;
-            border-radius: 0.5em;
-            margin-top: 0.2em;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            transition: 0.2s all linear;
-        }
-        li:hover {
-            scale: 1.1;
-        }
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        box-sizing: border-box;
-        margin-top: 0.5em;
-    }
-}
-
-.horizontal-container.vertical {
-    flex-direction: column;
-}
-
-.page-autowriter {
-    text-align: justify;
-    line-height: 1.6;
-    font-size: medium;
-    padding: 0.5em 2em 0.5em 2em;
+.user-logo {
+    height: 12em;
+    width: 12em;
+    margin: 0.5em;
+    border-radius: 0.5em;
+    object-fit: contain;
+    padding: 0.5em;
+    filter: invert(1);
 }
 
 #web-logo {
-    mask-image: url('../assets/images/web.png');
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    background-color: white;
-    height: 2em;
-    width: 3em;
+    height: 4em;
+    width: 4em;
     margin: 0.5em;
-    color: white;
-    min-width: 40px;
+    border-radius: 0.5em;
+    object-fit: contain;
+    padding: 0.5em;
+    filter: invert(1);
 }
+
 #programming-logo {
-    mask-image: url('../assets/images/programming.png');
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    background-color: white;
-    height: 2em;
-    width: 3em;
+    height: 4em;
+    width: 4em;
     margin: 0.5em;
-    color: white;
-    min-width: 40px;
+    border-radius: 0.5em;
+    object-fit: contain;
+    padding: 0.5em;
+    filter: invert(1);
 }
+
 #admin-logo {
-    mask-image: url('../assets/images/admin.png');
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    background-color: white;
-    height: 2em;
-    width: 3em;
+    height: 4em;
+    width: 4em;
     margin: 0.5em;
-    color: white;
-    min-width: 40px;
+    border-radius: 0.5em;
+    object-fit: contain;
+    padding: 0.5em;
+    filter: invert(1);
 }
+
 #sql-logo {
-    mask-image: url('../assets/images/sql.png');
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    background-color: white;
-    height: 2em;
-    width: 3em;
+    height: 4em;
+    width: 4em;
     margin: 0.5em;
-    color: white;
-    min-width: 40px;
+    border-radius: 0.5em;
+    object-fit: contain;
+    padding: 0.5em;
+    filter: invert(1);
 }
 </style>

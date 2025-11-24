@@ -8,7 +8,7 @@ import H1Vue from '@/components/PageTitle.vue';
     <header>
         <H1Vue />
         <div
-            class="headerField fixed top-0 left-0 bg-[#18191a] z-100500 w-full pb-1 m-0 border-b border-[#5c5c5c]"
+            class="headerField fixed top-0 left-0 bg-[#18191a] z-100500 w-full pb-1 m-0 border-b border-[#5c5c5c] min-w-full"
         >
             <HeaderVue />
         </div>

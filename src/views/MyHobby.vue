@@ -1,97 +1,109 @@
-<script setup></script>
+<script setup>
+import { useHobbyStore } from '@/stores/myHobby';
+import { storeToRefs } from 'pinia';
+
+const hobbyStore = useHobbyStore();
+const { hobbySections, categories } = storeToRefs(hobbyStore);
+</script>
 
 <template>
-    <main>
-        <canvas class="background"></canvas>
-        <section class="mainTheme">
-            <h2>Мои увлечения</h2>
-            <article id="hobby">
-                <h3>Мои увлечения</h3>
-                <div class="horizontal-container">
-                    <div>
-                        <p>
-                            В свободное время я увлекаюсь программированием, чтением технической
-                            литературы и изучением новых технологий.
-                        </p>
-                        <p>Также люблю активный отдых - велосипедные прогулки и походы в горы.</p>
-                        <p>
-                            Особое место занимает 3д печать - лучшее занятие для изучения многих
-                            интересных областей знаний.
-                        </p>
+    <main
+        class="flex flex-row flex-wrap items-start min-w-full min-h-[70vh] justify-center lg:max-w-[80%] text-white mt-30"
+    >
+        <section
+            class="min-w-[60%] lg:max-w-[60%] bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] flex flex-col overflow-hidden m-2 text-white"
+        >
+            <h2
+                class="w-full bg-[#18191a] p-4 m-0 border-b border-[#5c5c5c] text-white text-center"
+            >
+                Мои увлечения
+            </h2>
+            <div class="p-4">
+                <article
+                    v-for="section in hobbySections"
+                    :key="section.id"
+                    class="mb-8 last:mb-0"
+                    :id="section.id"
+                >
+                    <h3 class="text-[#ed6c21] text-xl font-bold mb-4">{{ section.title }}</h3>
+                    <div
+                        v-if="section.type === 'textWithImage'"
+                        class="horizontal-container flex flex-row m-4"
+                    >
+                        <div class="flex-grow">
+                            <p
+                                v-for="(paragraph, idx) in section.content.paragraphs"
+                                :key="idx"
+                                class="text-white py-1"
+                            >
+                                {{ paragraph }}
+                            </p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <img
+                                :src="section.content.image.src"
+                                :class="section.content.image.class"
+                                class="max-w-[50%] rounded-[2em] max-h-[15em] border border-[#5c5c5c]"
+                            />
+                        </div>
                     </div>
-                    <img src="../assets/images/hobby/printer.jpg" class="img-50" />
-                </div>
-            </article>
-
-            <article id="books">
-                <h3>Любимые книги</h3>
-                <figure>
-                    <img src="../assets/images/hobby/Азимов.jpg" class="img-50" />
-                    <figcaption>
-                        Цикл произведений "Галактическая история" – Айзек Азимов
-                    </figcaption>
-                </figure>
-                <figure>
-                    <img src="../assets/images/hobby/Гаррисон.jpg" class="img-50" />
-                    <figcaption>"Война роботов" – Гарри Гаррисон</figcaption>
-                </figure>
-                <figure>
-                    <img src="../assets/images/hobby/Полковник.jpg" class="img-50" />
-                    <figcaption>"Полковник Никто" – Алексей Суконин</figcaption>
-                </figure>
-                <figure>
-                    <img src="../assets/images/hobby/Деривация.jpg" class="img-50" />
-                    <figcaption>"Деривация" – Алексей Суконин</figcaption>
-                </figure>
-                <figure>
-                    <img src="../assets/images/hobby/Пикник.jpg" class="img-50" />
-                    <figcaption>"Пикник на обочине" – братья Стругацкие</figcaption>
-                </figure>
-                <figure>
-                    <img src="../assets/images/hobby/1984.webp" class="img-50" />
-                    <figcaption>"1984" – Джордж Оруэлл</figcaption>
-                </figure>
-                <figure>
-                    <img src="../assets/images/hobby/Пелевин.jpg" class="img-50" />
-                    <figcaption>"Ананасная вода для прекрасной дамы" – Виктор Пелевин</figcaption>
-                </figure>
-            </article>
-
-            <article id="music">
-                <h3>Любимая музыка</h3>
-                <p>Предпочитаю классическую музыку, тяжёлый и панк-рок:</p>
-                <figure>
-                    <img src="../assets/images/hobby/rammstein.webp" class="img-50" />
-                    <figcaption>Rammstein</figcaption>
-                </figure>
-                <figure>
-                    <img src="../assets/images/hobby/КИШ.webp" class="img-50" />
-                    <figcaption>КИШ</figcaption>
-                </figure>
-                <figure>
-                    <img src="../assets/images/hobby/Пламенев.jpg" class="img-50" />
-                    <figcaption>Группа Павла Пламенева</figcaption>
-                </figure>
-            </article>
-
-            <article id="movies">
-                <h3>Любимые фильмы</h3>
-                <ul>
-                    <li>Научная фантастика: "Матрица", "Интерстеллар"</li>
-                    <li>Фэнтези: "Властелин колец"</li>
-                    <li>Драма: "Побег из Шоушенка"</li>
-                    <li>Боевик: "Солнцепёк", "Лучшие в аду", "Турист"</li>
-                </ul>
-            </article>
+                    <div
+                        v-if="section.type === 'gallery'"
+                        class="flex flex-wrap justify-center gap-4"
+                    >
+                        <figure
+                            v-for="item in section.content.items"
+                            :key="item.caption"
+                            class="bg-[rgba(43,45,48,0.8)] p-4 rounded-2xl border border-[#5c5c5c] flex flex-col items-center transition-all duration-200 hover:scale-105"
+                        >
+                            <img
+                                :src="item.image.src"
+                                :class="item.image.class"
+                                class="w-full max-w-[200px] h-auto object-contain mb-2"
+                            />
+                            <figcaption class="text-white text-center mt-2">
+                                {{ item.caption }}
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <div v-if="section.type === 'list'">
+                        <ul class="list-none pl-0">
+                            <li
+                                v-for="(item, idx) in section.content.items"
+                                :key="idx"
+                                class="text-white py-1 before:content-['–'] before:mr-2"
+                            >
+                                {{ item }}
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+            </div>
         </section>
-        <aside class="aside-box">
-            <section>
-                <h3>Категории</h3>
-                <ul>
-                    <li><a href="#hobby">Моё хобби</a></li>
-                    <li><a href="#books">Любимые книги</a></li>
-                    <li><a href="#music">Любимая музыка</a></li>
-                    <li><a href="#movies">Любимые фильмы</a></li>
+
+        <!-- Боковая панель -->
+        <aside
+            class="bg-[rgba(34,36,39,0.8)] border border-[#5c5c5c] rounded-[2em] m-2 flex flex-col min-w-[20%] flex-grow overflow-hidden max-w-[25%]"
+        >
+            <section class="h-full">
+                <h3
+                    class="bg-[#18191a] m-0 p-4 min-h-[3em] border-b border-[#5c5c5c] flex items-center justify-center text-center"
+                >
+                    Категории
+                </h3>
+                <ul class="p-0 m-0 text-center">
+                    <li
+                        v-for="category in categories"
+                        :key="category.id"
+                        class="border-b border-[#5c5c5c] py-3 px-4"
+                    >
+                        <a
+                            :href="category.link"
+                            class="text-white no-underline relative hover:text-[#e05d2d] transition-colors duration-300 after:content-[''] after:absolute after:left-1/2 after:-bottom-1 after:w-0 after:h-0.5 after:bg-[#e05d2d] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+                        >
+                            {{ category.title }}
+                        </a>
+                    </li>
                 </ul>
             </section>
         </aside>
@@ -99,106 +111,16 @@
 </template>
 
 <style scoped>
-:root {
-    --theme: #ed6c21;
-    --header: #18191a;
-    --background: #1c1e21;
-    --text: #f5f5f5;
-    --snow: #ffffff;
-    --border-accent: #757575;
-    --border: #5c5c5c;
-    --marker: #b3b3b3;
-    --accent: #e05d2d;
-    --section: rgba(34, 36, 39, 0.8);
-    --aside-action: rgba(43, 45, 48, 0.8);
+.horizontal-container {
+    border-bottom: 1px solid #5c5c5c;
+    border-top: 1px solid #5c5c5c;
+    padding: 1em 0;
 }
+
 .img-50 {
     max-width: 50%;
     border-radius: 2em;
     max-height: 15em;
-    border: 1px solid var(--border);
-}
-
-.horizontal-container > div {
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    margin-right: 2em;
-    padding: 1em;
-}
-
-#books {
-    h3 {
-        width: 100%;
-    }
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-    flex-direction: row;
-}
-
-#books figure {
-    .img-50 {
-        width: 80%;
-        height: auto;
-        max-width: 80%;
-        object-fit: contain;
-        margin-bottom: 1em;
-        min-height: 20em;
-        border: 0px;
-    }
-    padding: 1em;
-    background-color: var(--background);
-    border: 1px solid var(--border);
-    border-radius: 2em;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    max-width: 20em;
-    min-width: 20%;
-    margin: 0.5em;
-    transition: 0.2s all linear;
-    flex-grow: 100;
-}
-
-#books figure:hover {
-    scale: 1.02;
-}
-
-#music {
-    h3,
-    p {
-        width: 100%;
-    }
-    img {
-        margin: 0.5em;
-    }
-    ul {
-        li {
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-        list-style: none;
-    }
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s all linear;
-}
-
-#movies ul li {
-    list-style: none;
-}
-
-#music figure {
-    transition: 0.2s all linear;
-}
-
-#music figure:hover {
-    scale: 1.1;
+    border: 1px solid #5c5c5c;
 }
 </style>
